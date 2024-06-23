@@ -4,9 +4,11 @@ import { Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
     return (
-        <main className='dark:bg-black overflow-hidden'>
-            <Navbar />
-            <Outlet />
+        <main className='dark:bg-black overflow-hidden min-h-screen flex flex-col'>
+            <div className="flex-grow">
+                <Navbar />
+                <Outlet />
+            </div>
             <Footer />
         </main>
     )
