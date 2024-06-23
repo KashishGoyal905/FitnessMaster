@@ -2,4 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'flowbite';
+/* ScrollBar */
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: bg-secondary-content;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #ffffff;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
