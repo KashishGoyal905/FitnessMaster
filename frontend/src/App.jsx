@@ -5,7 +5,7 @@ import AboutMe from './components/pages/AboutMe';
 import Classes from './components/pages/Classes';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
-
+import './index.css';
 
 const router = createBrowserRouter([
   {
