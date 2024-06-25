@@ -8,7 +8,7 @@ import luffy5 from '../../images/luffy5.jpg';
 
 export default function Home() {
   return (
-    <div>
+    <div className=''>
       <div className="relative bg-cover bg-center h-screen" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')` }}>
         <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
         <div className="container mx-auto h-full flex flex-col md:flex-row items-center justify-between px-4 md:px-8 relative z-10">
@@ -69,44 +69,47 @@ export default function Home() {
         <p className='text-2xl text-center mb-2 md:mb-8'>The Most Affordable and Beginner Friendly</p>
         <div className="grid grid-cols-1 px-4 md:px-auto sm:grid-cols-2 md:grid-cols-3 gap-4">
           <div className="card glass w-full md:w-96 h-[34rem]">
-            <figure>
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                alt="car!" />
+            <figure className='h-2/5'>
+              <img src={luffy2} alt="car!" className='w-full h-full' />
             </figure>
-            <div className="card-body">
-              <h2 className="text-xl md:text-2xl font-bold text-center">Morning</h2>
-              <p>How to park your car at your garage?</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Learn now!</button>
+            <div className="card-body h-3/5 text-center">
+              <h2 className="text-xl md:text-2xl font-bold">Morning</h2>
+              <h3 className="text-lg font-semibold">Instructor: Neelam Bindal</h3>
+              <p className="text-md">Time: 6:00 AM - 7:00 AM</p>
+              <p className="text-md">Price: 500Rs/month</p>
+              <p className="text-md">Kickstart your day with an energizing workout to boost your metabolism.</p>
+              <div className="card-actions justify-center md:justify-end">
+                <button className="btn btn-primary">Join now!</button>
               </div>
             </div>
           </div>
           <div className="card glass w-full md:w-96 h-[34rem]">
-            <figure>
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                alt="car!" />
+            <figure className='h-2/5'>
+              <img src={Zoro1} alt="car!" className='w-full h-full' />
             </figure>
-            <div className="card-body">
-              <h2 className="text-xl md:text-2xl font-bold text-center">Evening</h2>
-              <p>How to park your car at your garage?</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Learn now!</button>
-              </div>
-            </div>
-          </div>
-          <div className="card glass w-full md:w-96 h-[34rem]">
-            <figure>
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                alt="car!" />
-            </figure>
-            <div className="card-body">
+            <div className="card-body h-3/5 text-center">
               <h2 className="text-xl md:text-2xl font-bold text-center">Afternoon</h2>
-              <p>How to park your car at your garage?</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Learn now!</button>
+              <h3 className="text-lg font-semibold">Instructor: Neelam Bindal</h3>
+              <p className="text-md">Time: 12:00 PM - 1:00 PM</p>
+              <p className="text-md">Price: 500Rs/month</p>
+              <p className="text-md">A perfect mid-day class to keep your energy levels up and stress levels down.</p>
+              <div className="card-actions justify-center md:justify-end">
+                <button className="btn btn-primary">Join now!</button>
+              </div>
+            </div>
+          </div>
+          <div className="card glass w-full md:w-96 h-[34rem]">
+            <figure className='h-2/5'>
+              <img src={luffy5} alt="car!" className='w-full h-full' />
+            </figure>
+            <div className="card-body h-3/5 text-center">
+              <h2 className="text-xl md:text-2xl font-bold text-center">Evening</h2>
+              <h3 className="text-lg font-semibold">Instructor: Neelam Bindal</h3>
+              <p className="text-md">Time: 6:00 PM - 7:00 PM</p>
+              <p className="text-md">Price: 500Rs/month</p>
+              <p className="text-md">Wind down your day with a challenging workout to build strength and endurance.</p>
+              <div className="card-actions justify-center md:justify-end">
+                <button className="btn btn-primary">Join now!</button>
               </div>
             </div>
           </div>
