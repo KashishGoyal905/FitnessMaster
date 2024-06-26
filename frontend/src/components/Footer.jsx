@@ -9,17 +9,17 @@ export default function Footer() {
                         <h4 className="text-xl font-bold mb-2 text-center md:text-left">About Us</h4>
                         <p className="text-center md:text-left">Neelam Fitness is your ultimate destination for achieving your fitness goals.</p>
                         <div className="flex justify-center md:justify-start mt-4 space-x-2">
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" >
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className='shadow-lg overflow-hidden transform transition-transform hover:scale-110'>
                                 <img width="48" height="48" src="https://img.icons8.com/color/48/instagram-new--v1.png" alt="Instagram" />
                             </a>
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" >
+                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className='shadow-lg overflow-hidden transform transition-transform hover:scale-110'>
                                 <img width="48" height="48" src="https://img.icons8.com/color/48/facebook-new.png" alt="Facebook" />
                             </a>
-                            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+                            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className='shadow-lg overflow-hidden transform transition-transform hover:scale-110'>
                                 <img width="48" height="48" src="https://img.icons8.com/color/48/youtube-play.png" alt="YouTube" />
                             </a>
-                            <a href="mailto:support@neelamfitness.com">
-                                <img width="48" height="48" src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new"/>
+                            <a href="mailto:support@neelamfitness.com" className='shadow-lg overflow-hidden transform transition-transform hover:scale-110'>
+                                <img width="48" height="48" src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" />
                             </a>
                         </div>
                     </div>
