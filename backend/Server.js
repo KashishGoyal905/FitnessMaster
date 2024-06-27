@@ -9,6 +9,9 @@ const db = require('./config/mongoose');
 app.use(express.urlencoded({ extended: true })); // helps to parse the data
 
 
+// Routes
+app.use('/', require('./routes'));
+
 //listening to the server
 app.listen(PORT, function (req, res, err) {
     if (err) {

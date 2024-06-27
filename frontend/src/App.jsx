@@ -6,6 +6,7 @@ import Classes from './components/pages/Classes';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import './index.css';
+import SignUp from './components/pages/SignUp';
 
 const router = createBrowserRouter([
   {
@@ -17,9 +18,8 @@ const router = createBrowserRouter([
       { path: '/dashboard', element: <Dashboard />, },
     ]
   },
-  {
-    path: '/login', element: <Login />,
-  }
+  { path: '/user/login', element: <Login /> },
+  { path: '/user/signup', element: <SignUp /> }
 ]);
 
 
