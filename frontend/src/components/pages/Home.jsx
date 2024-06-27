@@ -42,22 +42,22 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-2">Photo Gallery</h2>
         <p className='text-2xl text-center mb-2 md:mb-8'>Our Best Images from Studio</p>
         <div className="grid grid-cols-1 p-4 md:p-0 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <img src={Chopper} alt="" className='h-full w-full' />
           </div>
-          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <img src={Franky} alt="" className='h-full w-full ' />
           </div>
-          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <img src={luffy} alt="" className='h-full w-full ' />
           </div>
-          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <img src={Zoro1} alt="" className='h-full w-full ' />
           </div>
-          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <img src={luffy2} alt="" className='h-full w-full ' />
           </div>
-          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="bg-gray-200 h-64 rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <img src={luffy5} alt="" className='h-full w-full ' />
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-2">Our Popular Classes</h2>
         <p className='text-2xl text-center mb-2 md:mb-8'>The Most Affordable and Beginner Friendly</p>
         <div className="grid grid-cols-1 px-4 md:px-auto sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="card glass w-full md:w-96 h-[34rem] shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="card glass w-full md:w-96 h-[34rem] shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <figure className='h-2/5'>
               <img src={luffy2} alt="car!" className='w-full h-full' />
             </figure>
@@ -84,7 +84,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="card glass w-full md:w-96 h-[34rem] shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="card glass w-full md:w-96 h-[34rem] shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <figure className='h-2/5'>
               <img src={Zoro1} alt="car!" className='w-full h-full' />
             </figure>
@@ -99,7 +99,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="card glass w-full md:w-96 h-[34rem] shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+          <div className="card glass w-full md:w-96 h-[34rem] shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <figure className='h-2/5'>
               <img src={luffy5} alt="car!" className='w-full h-full' />
             </figure>

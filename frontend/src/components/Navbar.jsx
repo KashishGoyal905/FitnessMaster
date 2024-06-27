@@ -32,11 +32,11 @@ export default function Navbar() {
                             <li><NavLink to="/instructor" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>About Me</NavLink></li>
                             <li><NavLink to="/classes" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Classes</NavLink></li>
                             <li><NavLink to="/dashboard" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Dashboard</NavLink></li>
-                            <li><NavLink to="/login" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Login</NavLink></li>
+                            <li><NavLink to="/user/login" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Login</NavLink></li>
                         </ul>
                     </div>
                 </div>
-                <Link to='/login' className="hidden md:btn md:text-lg md:mr-2">Login</Link>
+                <Link to='/user/login' className="hidden md:btn md:text-lg md:mr-2">Login</Link>
             </div>
         </div>
     );

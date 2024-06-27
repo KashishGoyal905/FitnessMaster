@@ -1,7 +1,7 @@
 // src/components/ClassCard.js
 export default function ClassCard({ image, title, description, time, instructor }) {
     return (
-        <div className="card glass my-4 md:my-0 w-full md:w-96 h-[34rem] rounded-lg shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+        <div className="card glass my-4 md:my-0 w-full md:w-96 h-[34rem] rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <figure className="w-full h-64 overflow-hidden">
                 <img src={image} alt={title} className="w-full h-full object-cover" />
             </figure>
