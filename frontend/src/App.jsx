@@ -5,8 +5,12 @@ import AboutMe from './components/pages/AboutMe';
 import Classes from './components/pages/Classes';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
-import './index.css';
 import SignUp from './components/pages/SignUp';
+import './index.css';
+
+// Toast Container
+import { ToastContainer, Bounce } from 'react-toastify';
+
 
 const router = createBrowserRouter([
   {
@@ -25,7 +29,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <>
+      <ToastContainer autoClose={1500} position="top-center" theme="colored" transition={Bounce} />
+      <RouterProvider router={router} />
+    </>
   );
 }
 
