@@ -16,7 +16,7 @@ const userSchema = new Schema({
     lastLogin: { type: Date },
     contactNumber: { type: String },
     address: { type: String, },
-    city: { type: String, required: true, },
+    city: { type: String, },
     state: { type: String, },
     postalcode: { type: Number },
     // Fitness-related fields
