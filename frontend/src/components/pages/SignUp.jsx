@@ -1,14 +1,22 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, redirect } from "react-router-dom";
 import img from '../../images/signup.png';
+
+// Toast messages
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import authContext from "../../context/AuthContext";
+
 
 export default function SignUp() {
     // Loading State
     const [isLoading, setIsLoading] = useState(false);
+    const { login } = useContext(authContext)
 
     async function handleSignUp(e) {
         e.preventDefault();
 
+        // Data received from the Form
         const fd = new FormData(e.target);
         const data = Object.fromEntries(fd.entries());
         console.log('User Sign Up Details: ', data);
@@ -28,17 +36,27 @@ export default function SignUp() {
 
             e.target.reset();
             setIsLoading(false);
-            return;
+            login(resData.token, resData.user);
+            toast.success(resData.message || 'User Created Succesfully');
+            return redirect('/');
         } catch (err) {
             console.log('Failed to Update the Profile: ', err.message);
-            // toast.error(err.message || 'Failed to Update the Profile');
-            // event.target.reset();
-            // return redirect(`/profile/${user._id}`);
+            toast.error(err.message || 'Failed to Update the Profile');
+            return;
         }
     }
 
     return (
         <div className="h-screen bg-gray-900 flex">
+            {isLoading &&
+                <div className="loading-overlay">
+                    <p className="relative">
+                        {/* {console.log("Clicking...")} */}
+                        <span className="loading loading-dots loading-lg text-primary"></span>
+                        {/* <progress className="progress progress-primary w-56"></progress> */}
+                    </p>
+                </div>
+            }
             <div className="flex flex-col justify-center py-12 px-6 m-12 lg:px-8 w-full max-w-md bg-slate-800">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <Link to="/"><img
@@ -51,7 +69,7 @@ export default function SignUp() {
                     </h2>
                     <p className="mt-2 text-center text-sm text-white">
                         Already have an account?{' '}
-                        <Link to="/user/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        <Link to="/user/login" className="font-bold text-[16px] text-primary hover:text-indigo-400">
                             Sign In
                         </Link>
                     </p>
@@ -62,15 +80,16 @@ export default function SignUp() {
                         <form className="space-y-6" method='post' encType="multipart/form-data" onSubmit={handleSignUp}>
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-white">
-                                    Username
+                                    Full Name
                                 </label>
                                 <div className="mt-1">
                                     <input
                                         id="name"
                                         name="username"
                                         type="text"
+                                        placeholder="John Smith"
                                         required
-                                        className="appearance-none block w-full px-3 py-2 border bg-slate-600 text-white border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+                                        className="appearance-none block w-full px-3 py-2 bg-slate-600 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                     />
                                 </div>
                             </div>
@@ -83,14 +102,15 @@ export default function SignUp() {
                                         id="email"
                                         name="email"
                                         type="email"
+                                        placeholder="john@google.com"
                                         required
-                                        className="appearance-none block w-full px-3 py-2 border bg-slate-600 text-white border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+                                        className="appearance-none block w-full px-3 py-2 bg-slate-600 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium  text-white">
+                                <label htmlFor="password" className="block text-sm font-medium text-white">
                                     Password
                                 </label>
                                 <div className="mt-1">
@@ -98,15 +118,16 @@ export default function SignUp() {
                                         id="password"
                                         name="password"
                                         type="password"
+                                        placeholder=""
                                         minLength={8}
                                         required
-                                        className="appearance-none block w-full px-3 py-2 border bg-slate-600 text-white border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+                                        className="appearance-none block w-full px-3 py-2 bg-slate-600 text-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label class="block mb-2 text-sm font-medium text-white dark:text-white" for="user_avatar">Upload file</label>
-                                <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-slate-600 text-white dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file" />
+                                <label className="block text-sm font-medium text-white mb-1" htmlFor="user_avatar">Profile Picture</label>
+                                <input className="block w-full text-sm px-3 rounded-md cursor-pointer bg-slate-600 text-white border border-slate-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" required name="image" id="user_avatar" type="file" />
                             </div>
 
                             <div className="flex items-center justify-between">
@@ -115,7 +136,7 @@ export default function SignUp() {
                                         id="remember_me"
                                         name="remember_me"
                                         type="checkbox"
-                                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                        className="h-4 w-4 text-primary focus:ring-primary rounded"
                                     />
                                     <label htmlFor="remember_me" className="ml-2 block text-sm text-white">
                                         Remember me

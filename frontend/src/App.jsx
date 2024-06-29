@@ -10,6 +10,7 @@ import './index.css';
 
 // Toast Container
 import { ToastContainer, Bounce } from 'react-toastify';
+import { AuthContextProvider } from './context/AuthContext';
 
 
 const router = createBrowserRouter([
@@ -29,10 +30,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
+    <AuthContextProvider>
       <ToastContainer autoClose={1500} position="top-center" theme="colored" transition={Bounce} />
       <RouterProvider router={router} />
-    </>
+    </AuthContextProvider>
   );
 }
 
