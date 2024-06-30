@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img from '../../images/signup.png';
 
 // Toast messages
@@ -11,7 +11,9 @@ import authContext from "../../context/AuthContext";
 export default function SignUp() {
     // Loading State
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useContext(authContext)
+    const { login } = useContext(authContext);
+    // For navigation
+    const navigate = useNavigate();
 
     async function handleSignUp(e) {
         e.preventDefault();
@@ -38,38 +40,38 @@ export default function SignUp() {
             setIsLoading(false);
             login(resData.token, resData.user);
             toast.success(resData.message || 'User Created Succesfully');
-            return redirect('/');
+            return navigate('/');
         } catch (err) {
-            console.log('Failed to Update the Profile: ', err.message);
-            toast.error(err.message || 'Failed to Update the Profile');
+            console.log('Failed to Sign Up|Frontend: ', err.message);
+            toast.error(err.message || 'Failed to Sign Up');
             return;
         }
     }
 
     return (
-        <div className="h-screen bg-gray-900 flex">
+        <div className={`h-screen bg-gray-900 flex`}>
             {isLoading &&
                 <div className="loading-overlay">
                     <p className="relative">
-                        {/* {console.log("Clicking...")} */}
                         <span className="loading loading-dots loading-lg text-primary"></span>
-                        {/* <progress className="progress progress-primary w-56"></progress> */}
                     </p>
                 </div>
             }
-            <div className="flex flex-col justify-center py-12 px-6 m-12 lg:px-8 w-full max-w-md bg-slate-800">
+            <div className={`${isLoading ? 'blur-background' : ''} flex flex-col justify-center py-12 px-4 md:px-6 lg:px-8 m-6 md:m-12 w-full max-w-md bg-slate-800 rounded-lg shadow-lg`}>
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                    <Link to="/"><img
-                        className="mx-auto h-auto w-auto"
-                        src="https://img.icons8.com/color/48/yoga-skin-type-1.png"
-                        alt="NeelamFitness Logo"
-                    /></Link>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+                    <Link to="/">
+                        <img
+                            className="mx-auto h-auto w-auto"
+                            src="https://img.icons8.com/color/48/yoga-skin-type-1.png"
+                            alt="NeelamFitness Logo"
+                        />
+                    </Link>
+                    <h2 className="mt-6 text-center text-2xl md:text-3xl font-bold md:font-extrabold text-white">
                         Create a new account
                     </h2>
-                    <p className="mt-2 text-center text-sm text-white">
+                    <p className="mt-2 text-center text-xs md:text-sm text-white">
                         Already have an account?{' '}
-                        <Link to="/user/login" className="font-bold text-[16px] text-primary hover:text-indigo-400">
+                        <Link to="/user/login" className="font-bold text-[13px] md:text-[16px] text-primary hover:text-indigo-400">
                             Sign In
                         </Link>
                     </p>
@@ -79,7 +81,7 @@ export default function SignUp() {
                     <div className="bg-transparent py-8 px-4 shadow sm:rounded-lg sm:px-10">
                         <form className="space-y-6" method='post' encType="multipart/form-data" onSubmit={handleSignUp}>
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-white">
+                                <label htmlFor="name" className="block text-xs md:text-sm font-medium text-white">
                                     Full Name
                                 </label>
                                 <div className="mt-1">
@@ -94,7 +96,7 @@ export default function SignUp() {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-white">
+                                <label htmlFor="email" className="block text-xs md:text-sm font-medium text-white">
                                     Email address
                                 </label>
                                 <div className="mt-1">
@@ -110,7 +112,7 @@ export default function SignUp() {
                             </div>
 
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-white">
+                                <label htmlFor="password" className="block text-xs md:text-sm font-medium text-white">
                                     Password
                                 </label>
                                 <div className="mt-1">
@@ -126,28 +128,13 @@ export default function SignUp() {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-white mb-1" htmlFor="user_avatar">Profile Picture</label>
-                                <input className="block w-full text-sm px-3 rounded-md cursor-pointer bg-slate-600 text-white border border-slate-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" required name="image" id="user_avatar" type="file" />
+                                <label className="block text-xs md:text-sm font-medium text-white mb-1" htmlFor="user_avatar">Profile Picture</label>
+                                <input className="block w-full text-xs md:text-sm px-3 rounded-md cursor-pointer bg-slate-600 text-white border border-slate-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" required name="image" id="user_avatar" type="file" />
                             </div>
-
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <input
-                                        id="remember_me"
-                                        name="remember_me"
-                                        type="checkbox"
-                                        className="h-4 w-4 text-primary focus:ring-primary rounded"
-                                    />
-                                    <label htmlFor="remember_me" className="ml-2 block text-sm text-white">
-                                        Remember me
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div>
+                            <div className="pt-2">
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm md:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                     Sign up
                                 </button>
