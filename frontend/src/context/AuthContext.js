@@ -13,7 +13,7 @@ const authContext = createContext({
 
 // export function authContextProvider({ children }) {
 export const AuthContextProvider = ({ children }) => {
-    
+
     // isAuthenticated state to check if the user is authenticated or not
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         const token = localStorage.getItem('token');
@@ -66,7 +66,6 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
         setUser(user);
-        toast.success('Logged in successfully!');
     };
 
     // logout

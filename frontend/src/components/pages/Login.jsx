@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img from '../../images/Login.png';
 
 // Toast messages
@@ -12,6 +12,8 @@ export default function Login() {
   // Loading State
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useContext(authContext)
+  // Navigation
+  const navigate = useNavigate();
 
   async function handleLogIn(e) {
     e.preventDefault();
@@ -46,38 +48,36 @@ export default function Login() {
       setIsLoading(false);
       login(resData.token, resData.user);
       toast.success(resData.message || 'Logged In Succesfully');
-      return redirect('/');
+      return navigate('/');
     } catch (err) {
-      console.log('Failed to Log In: ', err.message);
-      toast.error(err.message || 'Failed to Log In');
+      console.log('Failed to Login|Frontend: ', err.message);
+      toast.error(err.message || 'Failed to Login');
       return;
     }
   }
 
   return (
-    <div className="h-screen bg-gray-900 flex">
+    <div className={`h-screen bg-gray-900 flex`}>
       {isLoading &&
         <div className="loading-overlay">
           <p className="relative">
-            {/* {console.log("Clicking...")} */}
             <span className="loading loading-dots loading-lg text-primary"></span>
-            {/* <progress className="progress progress-primary w-56"></progress> */}
           </p>
         </div>
       }
-      <div className="flex flex-col justify-center py-12 px-6 m-12 lg:px-8 w-full max-w-md bg-slate-800">
+      <div className={`${isLoading ? 'blur-background' : ''} flex flex-col justify-center px-4 md:px-6 lg:px-8 m-6 md:m-12 w-full max-w-md bg-slate-800`}>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Link to="/"><img
             className="mx-auto h-auto w-auto"
             src="https://img.icons8.com/color/48/yoga-skin-type-1.png"
             alt="NeelamFitness Logo"
           /></Link>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+          <h2 className="mt-6 text-center text-2xl md:text-3xl font-bold md:font-extrabold text-white">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-white">
+          <p className="mt-2 text-center text-xs md:text-sm text-white">
             Don't have an account?{' '}
-            <Link to="/user/signup" className="font-bold text-[16px] text-primary hover:text-indigo-400">
+            <Link to="/user/signup" className="font-bold text-[13px] md:text-[16px] text-primary hover:text-indigo-400">
               Create One
             </Link>
           </p>
@@ -87,7 +87,7 @@ export default function Login() {
           <div className="bg-transparent py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form className="space-y-6" method='post' encType="multipart/form-data" onSubmit={handleLogIn}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-white">
+                <label htmlFor="email" className="block text-xs md:text-sm font-medium text-white">
                   Email address
                 </label>
                 <div className="mt-1">
@@ -103,7 +103,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-white">
+                <label htmlFor="password" className="block text-xs md:text-sm font-medium text-white">
                   Password
                 </label>
                 <div className="mt-1">
@@ -126,16 +126,16 @@ export default function Login() {
                     type="checkbox"
                     className="h-4 w-4 text-primary focus:ring-primary rounded"
                   />
-                  <label htmlFor="remember_me" className="ml-2 block text-sm text-white">
+                  <label htmlFor="remember_me" className="ml-2 block text-xs md:text-sm text-white">
                     Remember me
                   </label>
                 </div>
               </div>
 
-              <div>
+              <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm md:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Login
                 </button>
