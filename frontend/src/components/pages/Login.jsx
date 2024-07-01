@@ -7,11 +7,16 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // Context
 import authContext from "../../context/AuthContext";
+import useAuthRedirect from "../../middleware/useAuthRedirect";
 
 export default function Login() {
+  // If the user is already logged in, it will redirect to main page.
+  useAuthRedirect();
+  
   // Loading State
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useContext(authContext)
+  // Login function from Context
+  const { login } = useContext(authContext);
   // Navigation
   const navigate = useNavigate();
 

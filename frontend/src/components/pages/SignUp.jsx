@@ -6,9 +6,13 @@ import img from '../../images/signup.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import authContext from "../../context/AuthContext";
+import useAuthRedirect from "../../middleware/useAuthRedirect";
 
 
 export default function SignUp() {
+    // If the user is already logged in, it will redirect to main page.
+    useAuthRedirect();
+
     // Loading State
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useContext(authContext);
@@ -129,7 +133,7 @@ export default function SignUp() {
                             </div>
                             <div>
                                 <label className="block text-xs md:text-sm font-medium text-white mb-1" htmlFor="user_avatar">Profile Picture</label>
-                                <input className="block w-full text-xs md:text-sm px-3 rounded-md cursor-pointer bg-slate-600 text-white border border-slate-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" required name="image" id="user_avatar" type="file" />
+                                <input className="block w-full h-full text-xs md:text-sm px-2 py-0 rounded-md cursor-pointer bg-slate-600 text-white border border-slate-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" required name="image" id="user_avatar" type="file" />
                             </div>
                             <div className="pt-2">
                                 <button
@@ -146,7 +150,7 @@ export default function SignUp() {
 
             <div className="hidden lg:block relative w-0 flex-1">
                 <img
-                    className="absolute inset-0 p-16 h-full w-full "
+                    className="absolute inset-0 p-16 h-full w-full"
                     src={img}
                     alt=""
                 />

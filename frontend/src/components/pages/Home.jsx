@@ -5,12 +5,13 @@ import luffy from '../../images/luffy.jpg';
 import luffy2 from '../../images/luffy2.jpg';
 import Zoro1 from '../../images/Zoro1.jpg';
 import luffy5 from '../../images/luffy5.jpg';
+import image from '../../images/Home.png'
 
 export default function Home() {
   return (
     <div className=''>
       {/* Hero Secition */}
-      <div className="relative bg-cover bg-center h-screen" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')` }}>
+      <div className="relative h-screen" >
         <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
         <div className="container mx-auto h-full flex flex-col md:flex-row items-center justify-between px-4 md:px-8 relative z-10">
           <div className="text-white max-w-md mt-40 text-center md:text-left md:mt-0">
@@ -31,8 +32,8 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="md:block hidden">
-            {/* <img src={image} alt="YourImage" className="rounded-lg shadow-lg" /> */}
+          <div className="">
+            <img src={image} alt="YourImage" className="relative p-0 md:p-8 h-[95%] md:h-full w-full md:w-[45vw] rounded-lg shadow-lg" />
           </div>
         </div>
       </div>
