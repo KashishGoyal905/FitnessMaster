@@ -11,6 +11,9 @@ import './index.css';
 // Toast Container
 import { ToastContainer, Bounce } from 'react-toastify';
 import { AuthContextProvider } from './context/AuthContext';
+import UserWelcomeDashboard from './components/pages/UserWelcomeDashboard';
+import UserProfile from './components/pages/UserProfile';
+import UserClasses from './components/pages/UserClasses';
 
 
 const router = createBrowserRouter([
@@ -22,7 +25,13 @@ const router = createBrowserRouter([
       { path: '/classes', element: <Classes />, },
     ]
   },
-  { path: '/dashboard', element: <Dashboard />, },
+  {
+    path: '/dashboard', element: <Dashboard />, children: [
+      { path: '', element: <UserWelcomeDashboard /> },
+      { path: 'profile', element: <UserProfile /> },
+      { path: 'classes', element: <UserClasses /> },
+    ]
+  },
   { path: '/user/login', element: <Login /> },
   { path: '/user/signup', element: <SignUp /> }
 ]);
