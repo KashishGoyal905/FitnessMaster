@@ -65,17 +65,17 @@ export default function Dashboard() {
 
     if (isAuthenticated && user.userRole === 'user') {
         return (
-            <>
+            <div>
                 <Navbar />
                 <div style={{ display: 'flex' }}>
-                    <div style={{ position: 'fixed', height: '100vh', zIndex: 1000 }} className="pt-[4.5rem]">
+                    <div style={{ position: 'fixed', zIndex: 1000 }} className="relative top-[4.5rem] h-screen">
                         <ResponsiveSidebar />
                     </div>
-                    <div style={{ marginLeft: 250, width: 'calc(100% - 250px)', overflowY: 'auto', height: '100vh' }} className="pt-[4.8rem] p-4">
+                    <div style={{ width: 'calc(100% - 215px)', overflowY: 'auto', height: '100vh' }} className="relative top-[4.5rem] left-[215px] p-4">
                         <Outlet />
                     </div>
                 </div>
-            </>
+            </div>
         )
     }
 

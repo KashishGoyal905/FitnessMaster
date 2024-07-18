@@ -1,5 +1,5 @@
 // Sidebar.js
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Drawer,
   List,
@@ -7,7 +7,6 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  IconButton,
   Badge,
   useMediaQuery
 } from '@mui/material';
@@ -15,32 +14,29 @@ import {
   Dashboard as DashboardIcon,
   Inbox as InboxIcon,
   ViewKanban as KanbanIcon,
-  People as UsersIcon,
-  Store as ProductsIcon,
-  Login as SignInIcon,
-  AppRegistration as SignUpIcon,
-  Menu as MenuIcon
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ open, onClose }) => {
   return (
-    <Drawer className=''
+    <Drawer
       variant="temporary"
       open={open}
       onClose={onClose}
       sx={{
-        '& .MuiDrawer-paper': { width: 250, backgroundColor: '#2c2c2c', color: '#fff' }
+        '& .MuiDrawer-paper': { width: 215, backgroundColor: '#2c2c2c', color: '#fff' }
       }}
     >
       <List>
-          <ListItem>
+        <Link to={'/dashboard'} onClick={onClose}>
+          <ListItem button>
             <ListItemIcon>
               <DashboardIcon style={{ color: '#fff' }} />
             </ListItemIcon>
-            <ListItemText primary="User Dashboard" />
+            <ListItemText primary="Dashboard" />
           </ListItem>
-        <Link to={'profile'}>
+        </Link>
+        <Link to={'/dashboard/profile'} onClick={onClose}>
           <ListItem button>
             <ListItemIcon>
               <KanbanIcon style={{ color: '#fff' }} />
@@ -49,7 +45,7 @@ const Sidebar = ({ open, onClose }) => {
             <Badge color="primary" style={{ marginLeft: 'auto' }} />
           </ListItem>
         </Link>
-        <Link to={'classes'}>
+        <Link to={'/dashboard/classes'} onClick={onClose}>
           <ListItem button>
             <ListItemIcon>
               <InboxIcon style={{ color: '#fff' }} />
@@ -66,15 +62,17 @@ const Sidebar = ({ open, onClose }) => {
 
 const PermanentSidebar = () => {
   return (
-    <div style={{ width: 250, backgroundColor: '#2c2c2c', height: '100vh', color: '#fff' }}>
+    <div style={{ width: 215, backgroundColor: '#2c2c2c', height: '100vh', color: '#fff' }}>
       <List>
-        <ListItem button>
-          <ListItemIcon>
-            <DashboardIcon style={{ color: '#fff' }} />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItem>
-        <Link to={'profile'}>
+        <Link to={'/dashboard'}>
+          <ListItem button>
+            <ListItemIcon>
+              <DashboardIcon style={{ color: '#fff' }} />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+        </Link>
+        <Link to={'/dashboard/profile'}>
           <ListItem button>
             <ListItemIcon>
               <KanbanIcon style={{ color: '#fff' }} />
@@ -83,7 +81,7 @@ const PermanentSidebar = () => {
             <Badge color="primary" style={{ marginLeft: 'auto' }} />
           </ListItem>
         </Link>
-        <Link to={'classes'}>
+        <Link to={'/dashboard/classes'}>
           <ListItem button>
             <ListItemIcon>
               <InboxIcon style={{ color: '#fff' }} />
@@ -98,17 +96,13 @@ const PermanentSidebar = () => {
   );
 };
 
-const ResponsiveSidebar = () => {
-  const [open, setOpen] = useState(false);
+const ResponsiveSidebar = ({ open, setOpen }) => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
     <>
       {isMobile ? (
         <>
-          <IconButton onClick={() => setOpen(true)} style={{ color: '#fff' }}>
-            <MenuIcon />
-          </IconButton>
           <Sidebar open={open} onClose={() => setOpen(false)} />
         </>
       ) : (
