@@ -94,6 +94,7 @@ router.post('/login', async function (req, res) {
             { userId: user._id, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         );
 
+        user.isActive = true;
         return res.status(200).json({ message: 'Logged in successfully', user: user, token: token });
     } catch (error) {
         console.log('Error loggin in the user|Backend: ', error);
