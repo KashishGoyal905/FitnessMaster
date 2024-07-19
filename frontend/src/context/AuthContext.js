@@ -82,7 +82,6 @@ export const AuthContextProvider = ({ children }) => {
     const updateFun = (updatedUser) => {
         localStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
-        toast.success('Profile updated successfully!');
     }
 
     return (
