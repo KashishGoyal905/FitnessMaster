@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import authContext from '../../context/AuthContext';
-// Toast messages
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,7 +19,6 @@ export default function UserProfile() {
   });
 
   const [myUser, setMyUser] = useState(user);
-  // Loading State
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
@@ -30,7 +28,7 @@ export default function UserProfile() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    // Handle form submission logic here
+
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
     console.log('User Update Details: ', data);
@@ -39,7 +37,7 @@ export default function UserProfile() {
       setIsLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/update/${user._id}`, {
         method: 'POST',
-        body: fd, // FormData automatically sets the correct headers
+        body: fd,
       });
 
       const resData = await response.json();
@@ -48,70 +46,69 @@ export default function UserProfile() {
         throw new Error(resData.message || 'Failed to Sign Up');
       }
 
-      // e.target.reset();
       setIsLoading(false);
       setMyUser(resData.user);
       updateFun(resData.user);
-      toast.success(resData.message || 'User Created Succesfully');
+      toast.success(resData.message || 'User Updated Successfully');
     } catch (err) {
       setIsLoading(false);
-      console.log('Failed to Sign Up|Frontend: ', err.message);
-      toast.error(err.message || 'Failed to Sign Up');
+      console.log('Failed to update user details: ', err.message);
+      toast.error(err.message || 'Failed to update user details');
       return;
     }
-
-  };
+  }
 
   return (
     <div className="p-4">
-      {isLoading &&
+      {isLoading && (
         <div className="loading-overlay">
           <p className="relative">
             <span className="loading loading-dots loading-lg text-primary"></span>
           </p>
         </div>
-      }
+      )}
       <div className="w-full min-h-8 mb-4">
-        <h1 className="text-5xl text-center font-bold">Your Profile</h1>
-        <hr className="mt-2" />
+        <h1 className="text-4xl text-center font-bold text-primary">Your Profile</h1>
+        <hr className="mt-2 border-primary" />
       </div>
-      <div className="flex flex-col items-center mt-8">
-        <div className="bg-white rounded-lg shadow-xl overflow-hidden w-full md:w-2/3 lg:w-[60vw]">
-          <div className="bg-cover bg-center h-32" style={{ backgroundImage: `url(${myUser.image || 'default.jpg'})` }}></div>
-          <div className="p-4 md:p-6">
-            <div className="flex items-center mb-4">
+      <div className="flex flex-col items-center mt-6">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full md:w-2/3 lg:w-[65vw]">
+          <div className="bg-cover bg-center h-48" style={{ backgroundImage: `url(${myUser.image || 'default.jpg'})` }}></div>
+          <div className="p-6 bg-gray-800 text-gray-200">
+            <div className="flex flex-col items-center -mt-20">
               <img
-                className="w-24 h-24 rounded-full mr-4"
+                className="w-32 h-32 rounded-full border-4 border-white"
                 src={myUser.image || 'default-avatar.png'}
                 alt="Profile"
               />
-              <div>
-                <h2 className="text-2xl font-bold">{profileData.username}</h2>
-                <p className="text-gray-600">{user.email}</p>
-                <p className="text-gray-600">{profileData.contactNumber || 'NA'}</p>
-              </div>
+              <h2 className="mt-4 text-3xl font-semibold text-primary">{profileData.username}</h2>
+              <p className="text-gray-200">{myUser.email}</p>
+              <p className="text-gray-200">{profileData.contactNumber || 'NA'}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="text-gray-600"><strong>City:</strong> {profileData.city || 'NA'}</div>
-              <div className="text-gray-600"><strong>Address:</strong> {profileData.address || 'NA'}</div>
-              <div className="text-gray-600"><strong>Weight:</strong> {profileData.weight || 'NA'}</div>
-              <div className="text-gray-600"><strong>Height:</strong> {profileData.height || 'NA'}</div>
-              <div className="text-gray-600"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
-              <div className="text-gray-600"><strong>Age:</strong> {profileData.age || 'NA'}</div>
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+              <div className="text-gray-200"><strong>City:</strong> {profileData.city || 'NA'}</div>
+              <div className="text-gray-200"><strong>Address:</strong> {profileData.address || 'NA'}</div>
+              <div className="text-gray-200"><strong>Weight:</strong> {profileData.weight || 'NA'}</div>
+              <div className="text-gray-200"><strong>Height:</strong> {profileData.height || 'NA'}</div>
+              <div className="text-gray-200"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
+              <div className="text-gray-200"><strong>Age:</strong> {profileData.age || 'NA'}</div>
+            </div>
+            <div className="mt-6 bg-gray-700 text-gray-200 p-4 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold text-center text-primary mb-2">Goals</h3>
+              <p className="text-center">{profileData.goals || 'No goals set yet'}</p>
             </div>
           </div>
         </div>
-
-        <div className="w-full md:w-2/3 lg:w-[60vw] mt-8 p-4 bg-white shadow-md rounded-lg">
+        <div className="w-full md:w-2/3 lg:w-[65vw] mt-8 p-4 bg-gray-800 text-gray-200 shadow-md rounded-lg">
           <form method="post" className="space-y-6" encType="multipart/form-data" onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold mb-4 text-center">Update Information</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center text-primary">Update Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium">Full Name</label>
                 <input
                   type="text"
                   name="username"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.username}
                   onChange={handleInputChange}
                 />
@@ -119,11 +116,11 @@ export default function UserProfile() {
               <div>
                 <label className="block text-sm font-medium">Mobile Number</label>
                 <input
-                  type="text"
+                  type="number"
                   name="contactNumber"
                   pattern="\d{10}"
                   title="It must contain exactly 10 digits"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.contactNumber}
                   onChange={handleInputChange}
                 />
@@ -135,14 +132,14 @@ export default function UserProfile() {
                   name="email"
                   disabled
                   value={user.email}
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium">Gender</label>
                 <select
                   name="gender"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.gender}
                   onChange={handleInputChange}
                 >
@@ -154,30 +151,36 @@ export default function UserProfile() {
               </div>
               <div>
                 <label className="block text-sm font-medium">Weight</label>
-                <input
-                  type="number"
-                  name="weight"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  value={profileData.weight}
-                  onChange={handleInputChange}
-                />
+                <div className="flex">
+                  <input
+                    type="number"
+                    name="weight"
+                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                    value={profileData.weight}
+                    onChange={handleInputChange}
+                  />
+                  <span className="ml-2 mt-2 text-gray-200">kg</span>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium">Height</label>
-                <input
-                  type="number"
-                  name="height"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  value={profileData.height}
-                  onChange={handleInputChange}
-                />
+                <div className="flex">
+                  <input
+                    type="number"
+                    name="height"
+                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                    value={profileData.height}
+                    onChange={handleInputChange}
+                  />
+                  <span className="ml-2 mt-2 text-gray-200">ft</span>
+                </div>
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium">Street Address</label>
                 <input
                   type="text"
                   name="address"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.address}
                   onChange={handleInputChange}
                 />
@@ -187,7 +190,7 @@ export default function UserProfile() {
                 <input
                   type="text"
                   name="city"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.city}
                   onChange={handleInputChange}
                 />
@@ -197,48 +200,47 @@ export default function UserProfile() {
                 <input
                   type="text"
                   name="state"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.state}
                   onChange={handleInputChange}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">ZIP / Postal Code</label>
+                <label className="block text-sm font-medium">Postal Code</label>
                 <input
                   type="number"
                   name="postalcode"
-                  minLength={6}
-                  maxLength={6}
                   pattern="\d{6}"
                   title="It must contain exactly 6 digits"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.postalcode}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="">
+              <div>
                 <label className="block text-sm font-medium">Profile Picture</label>
                 <input
                   type="file"
                   name="image"
-                  accept=".jpg,.png,.jpeg"
-                  className="mt-1 block w-full border rounded-md shadow-sm  px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  accept="image/*"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-0 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                 />
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium">Goals</label>
                 <textarea
                   name="goals"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  rows="3"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                   value={profileData.goals}
                   onChange={handleInputChange}
-                ></textarea>
+                />
               </div>
             </div>
-            <div className="mt-6 text-center">
+            <div className="flex justify-center">
               <button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none"
+                className="py-2 px-4 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-75"
               >
                 Update Profile
               </button>
@@ -247,5 +249,6 @@ export default function UserProfile() {
         </div>
       </div>
     </div>
+
   );
 }

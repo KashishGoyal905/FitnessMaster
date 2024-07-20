@@ -9,7 +9,10 @@ export default function UserClasses() {
 
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">My Classes</h1>
+      <div className="w-full min-h-8 mb-4">
+        <h1 className="text-5xl text-center font-bold text-primary">Your Classes</h1>
+        <hr className="mt-2 border-primary" />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {classes.map((cls) => (
           <div key={cls.id} className="bg-white p-4 rounded shadow">

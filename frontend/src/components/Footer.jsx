@@ -7,7 +7,7 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row justify-around">
                     <div className="mb-6 md:mb-0">
                         <h4 className="text-xl font-bold mb-2 text-center md:text-left">About Us</h4>
-                        <p className="text-center md:text-left">Neelam Fitness is your ultimate destination for achieving your fitness goals.</p>
+                        <p className="text-center md:text-left">Fitness Master is your ultimate destination for achieving your fitness goals.</p>
                         <div className="flex justify-center md:justify-start mt-4 space-x-2">
                             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className='shadow-lg overflow-hidden transform transition-transform hover:scale-110'>
                                 <img width="48" height="48" src="https://img.icons8.com/color/48/instagram-new--v1.png" alt="Instagram" />
@@ -39,7 +39,7 @@ export default function Footer() {
                     </div>
                 </div>
                 <div className="text-center mt-8">
-                    <p>&copy; 2024 Neelam Fitness. All rights reserved.</p>
+                    <p>&copy; 2024 Fitness Master. All rights reserved.</p>
                 </div>
             </div>
         </footer>
