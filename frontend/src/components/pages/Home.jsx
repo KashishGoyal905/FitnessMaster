@@ -1,10 +1,10 @@
 // import { Link } from "react-router-dom";
-import Chopper from '../../images/Chopper.jpg';
-import Franky from '../../images/Franky.jpg';
-import luffy from '../../images/luffy.jpg';
-import luffy2 from '../../images/luffy2.jpg';
-import Zoro1 from '../../images/Zoro1.jpg';
-import luffy5 from '../../images/luffy5.jpg';
+import Chopper from '../../images/Home1.webp';
+import Franky from '../../images/Home2.webp';
+import luffy from '../../images/Home3.avif';
+import luffy2 from '../../images/Home4.jpg';
+import Zoro1 from '../../images/Home5.jpg';
+import luffy5 from '../../images/Home8.avif';
 import image from '../../images/Home.png'
 
 export default function Home() {

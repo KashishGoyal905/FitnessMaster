@@ -14,7 +14,7 @@ export default function Navbar() {
     return (
         <div className="navbar bg-gray-900 fixed top-0 z-20">
             <div className="navbar-start">
-                <Link to='/' className="btn btn-ghost text-2xl text-white">Neelam Fitness</Link>
+                <Link to='/' className="btn btn-ghost text-2xl text-white">Fitness Master</Link>
             </div>
             <div className="navbar-center hidden md:flex">
                 <ul className="menu menu-horizontal px-1 text-xl">
