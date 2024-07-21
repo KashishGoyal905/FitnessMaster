@@ -15,7 +15,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
         <div className="container mx-auto h-full flex flex-col md:flex-row items-center justify-between px-4 md:px-8 relative z-10">
           <div className="text-white max-w-md mt-40 text-center md:text-left md:mt-0">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">Welcome to <br></br><span className="text-4xl md:text-6xl">Neelam Fitness</span></h1>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">Welcome to <br></br><span className="text-4xl md:text-6xl">Fitness Master</span></h1>
             <p className="text-lg md:text-xl mb-6">Transform your body and mind with personalized training programs.</p>
             <div className="flex mt-8 space-x-4 justify-center md:justify-start">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className='shadow-lg overflow-hidden transform transition-transform hover:scale-110'>

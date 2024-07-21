@@ -1,4 +1,3 @@
-// Sidebar.js
 import React from 'react';
 import {
   Drawer,
@@ -15,6 +14,9 @@ import {
   Inbox as InboxIcon,
   ViewKanban as KanbanIcon,
 } from '@mui/icons-material';
+
+import { IconButton } from '@mui/material';
+// import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ open, onClose }) => {
@@ -62,7 +64,7 @@ const Sidebar = ({ open, onClose }) => {
 
 const PermanentSidebar = () => {
   return (
-    <div style={{ width: 215, backgroundColor: '#2c2c2c', height: '100vh', color: '#fff' }}>
+    <div style={{ backgroundColor: '#2c2c2c', height: '100vh', color: '#fff' }}>
       <List>
         <Link to={'/dashboard'}>
           <ListItem button>
@@ -103,6 +105,14 @@ const ResponsiveSidebar = ({ open, setOpen }) => {
     <>
       {isMobile ? (
         <>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={() => setOpen(true)}
+            sx={{ position: 'fixed', zIndex: 1100 }}
+          >
+          </IconButton>
           <Sidebar open={open} onClose={() => setOpen(false)} />
         </>
       ) : (
