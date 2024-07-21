@@ -1,12 +1,14 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import authContext from "../../context/AuthContext";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import ResponsiveSidebar from "../Sidebar";
+// import MenuIcon from '@mui/icons-material/Menu';
 
 export default function Dashboard() {
     const { isAuthenticated, user } = useContext(authContext);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     if (!isAuthenticated) {
         return (
@@ -67,14 +69,20 @@ export default function Dashboard() {
         return (
             <div>
                 <Navbar />
-                <div style={{ display: 'flex' }}>
-                    <div style={{ position: 'fixed', zIndex: 1000 }} className="relative top-[4.5rem] h-screen">
-                        <ResponsiveSidebar />
+                <div style={{ display: 'flex' }} className="w-full">
+                    <div style={{ position: 'fixed', zIndex: 1000 }} className="relative top-[4.5rem] h-screen w-[13vw]">
+                        <ResponsiveSidebar open={sidebarOpen} setOpen={setSidebarOpen} />
                     </div>
-                    <div style={{ width: 'calc(100% - 215px)', overflowY: 'auto', height: '100vh' }} className="relative top-[4.5rem] left-[215px] p-4">
+                    <div style={{ overflowY: 'auto', height: '100vh' }} className="relative top-[4.5rem] md:left-[230px] p-4">
                         <Outlet />
                     </div>
                 </div>
+                {/* <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="md:hidden fixed top-[4.5rem] left-4 z-50 bg-primary text-white p-2 rounded-md"
+                >
+                    <MenuIcon />
+                </button> */}
             </div>
         )
     }

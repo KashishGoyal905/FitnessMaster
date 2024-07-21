@@ -67,11 +67,7 @@ export default function UserProfile() {
           </p>
         </div>
       )}
-      <div className="w-full min-h-8 mb-4">
-        <h1 className="text-4xl text-center font-bold text-primary">Your Profile</h1>
-        <hr className="mt-2 border-primary" />
-      </div>
-      <div className="flex flex-col items-center mt-6">
+      <div className="flex flex-col items-center mt-2">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full md:w-2/3 lg:w-[65vw]">
           <div className="bg-cover bg-center h-48" style={{ backgroundImage: `url(${myUser.image || 'default.jpg'})` }}></div>
           <div className="p-6 bg-gray-800 text-gray-200">
@@ -103,7 +99,7 @@ export default function UserProfile() {
           <form method="post" className="space-y-6" encType="multipart/form-data" onSubmit={handleSubmit}>
             <h2 className="text-2xl font-bold mb-4 text-center text-primary">Update Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Full Name</label>
                 <input
                   type="text"
@@ -113,7 +109,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Mobile Number</label>
                 <input
                   type="number"
@@ -125,7 +121,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Email Address</label>
                 <input
                   type="email"
@@ -135,7 +131,7 @@ export default function UserProfile() {
                   className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Gender</label>
                 <select
                   name="gender"
@@ -149,7 +145,7 @@ export default function UserProfile() {
                   <option value="other">Other</option>
                 </select>
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Weight</label>
                 <div className="flex">
                   <input
@@ -162,7 +158,7 @@ export default function UserProfile() {
                   <span className="ml-2 mt-2 text-gray-200">kg</span>
                 </div>
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Height</label>
                 <div className="flex">
                   <input
@@ -185,7 +181,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">City</label>
                 <input
                   type="text"
@@ -195,7 +191,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">State / Province</label>
                 <input
                   type="text"
@@ -205,7 +201,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Postal Code</label>
                 <input
                   type="number"
@@ -217,7 +213,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Profile Picture</label>
                 <input
                   type="file"
