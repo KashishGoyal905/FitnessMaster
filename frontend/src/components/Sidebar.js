@@ -16,7 +16,7 @@ import {
 } from '@mui/icons-material';
 
 import { IconButton } from '@mui/material';
-// import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ open, onClose }) => {
@@ -106,12 +106,14 @@ const ResponsiveSidebar = ({ open, setOpen }) => {
       {isMobile ? (
         <>
           <IconButton
+            className=''
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={() => setOpen(true)}
             sx={{ position: 'fixed', zIndex: 1100 }}
           >
+            <MenuIcon className='my-[42vh] m-2'/>
           </IconButton>
           <Sidebar open={open} onClose={() => setOpen(false)} />
         </>

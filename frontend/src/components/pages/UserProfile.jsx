@@ -67,29 +67,29 @@ export default function UserProfile() {
           </p>
         </div>
       )}
-      <div className="flex flex-col items-center mt-2">
+      <div className="flex flex-col items-center md:mt-2">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full md:w-2/3 lg:w-[65vw]">
-          <div className="bg-cover bg-center h-48" style={{ backgroundImage: `url(${myUser.image || 'default.jpg'})` }}></div>
+          <div className="bg-cover bg-center h-40 md:h-48" style={{ backgroundImage: `url(${myUser.image || 'default.jpg'})` }}></div>
           <div className="p-6 bg-gray-800 text-gray-200">
             <div className="flex flex-col items-center -mt-20">
               <img
-                className="w-32 h-32 rounded-full border-4 border-white"
+                className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-white"
                 src={myUser.image || 'default-avatar.png'}
                 alt="Profile"
               />
-              <h2 className="mt-4 text-3xl font-semibold text-primary">{profileData.username}</h2>
-              <p className="text-gray-200">{myUser.email}</p>
-              <p className="text-gray-200">{profileData.contactNumber || 'NA'}</p>
+              <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-primary">{profileData.username}</h2>
+              <p className="text-gray-200 text-sm">{myUser.email}</p>
+              <p className="text-gray-200 text-sm">{profileData.contactNumber || 'NA'}</p>
             </div>
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-              <div className="text-gray-200"><strong>City:</strong> {profileData.city || 'NA'}</div>
-              <div className="text-gray-200"><strong>Address:</strong> {profileData.address || 'NA'}</div>
-              <div className="text-gray-200"><strong>Weight:</strong> {profileData.weight || 'NA'}</div>
-              <div className="text-gray-200"><strong>Height:</strong> {profileData.height || 'NA'}</div>
-              <div className="text-gray-200"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
-              <div className="text-gray-200"><strong>Age:</strong> {profileData.age || 'NA'}</div>
-            </div>
-            <div className="mt-6 bg-gray-700 text-gray-200 p-4 rounded-lg shadow-md">
+            <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+              <div className="text-gray-200 text-sm"><strong>City:</strong> {profileData.city || 'NA'}</div>
+              <div className="text-gray-200 text-sm"><strong>Address:</strong> {profileData.address || 'NA'}</div>
+              <div className="text-gray-200 text-sm"><strong>Weight:</strong> {profileData.weight || 'NA'}</div>
+              <div className="text-gray-200 text-sm"><strong>Height:</strong> {profileData.height || 'NA'}</div>
+              <div className="text-gray-200 text-sm"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
+              <div className="text-gray-200 text-sm"><strong>Age:</strong> {profileData.age || 'NA'}</div>
+            </div>  
+            <div className="mt-4 md:mt-6 bg-gray-700 text-gray-200 p-4 rounded-lg shadow-md">
               <h3 className="text-2xl font-semibold text-center text-primary mb-2">Goals</h3>
               <p className="text-center">{profileData.goals || 'No goals set yet'}</p>
             </div>
@@ -97,7 +97,7 @@ export default function UserProfile() {
         </div>
         <div className="w-full md:w-2/3 lg:w-[65vw] mt-8 p-4 bg-gray-800 text-gray-200 shadow-md rounded-lg">
           <form method="post" className="space-y-6" encType="multipart/form-data" onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold mb-4 text-center text-primary">Update Information</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-primary">Update Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-2 md:col-span-1">
                 <label className="block text-sm font-medium">Full Name</label>
