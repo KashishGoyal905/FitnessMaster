@@ -69,20 +69,20 @@ export default function Dashboard() {
         return (
             <div>
                 <Navbar />
-                <div style={{ display: 'flex' }} className="w-full">
-                    <div style={{ position: 'fixed', zIndex: 1000 }} className="relative top-[4.5rem] h-screen w-[13vw]">
+                <div className="flex w-[100vw] overflow-x-hidden">
+                    <div style={{ position: 'fixed', zIndex: 1000 }} className="relative top-[3.5rem] md:top-[4.7rem] h-screen w-[8vw]">
                         <ResponsiveSidebar open={sidebarOpen} setOpen={setSidebarOpen} />
                     </div>
-                    <div style={{ overflowY: 'auto', height: '100vh' }} className="relative top-[4.5rem] md:left-[230px] p-4">
+                    <div style={{ overflowY: 'auto', height: '100vh' }} className="relative top-[3.5rem] md:top-[4.6em] md:left-[230px] p-4 w-full md:w-[84vw] overflow-hidden">
                         <Outlet />
                     </div>
                 </div>
-                {/* <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="md:hidden fixed top-[4.5rem] left-4 z-50 bg-primary text-white p-2 rounded-md"
-                >
-                    <MenuIcon />
-                </button> */}
+                    {/* <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="md:hidden fixed top-[4.5rem] left-4 z-50 bg-primary text-white p-2 rounded-md"
+                    >
+                        <MenuIcon />
+                    </button> */}
             </div>
         )
     }
