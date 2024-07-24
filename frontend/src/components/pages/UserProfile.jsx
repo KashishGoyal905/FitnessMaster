@@ -88,7 +88,7 @@ export default function UserProfile() {
               <div className="text-gray-200 text-sm"><strong>Height:</strong> {profileData.height || 'NA'}</div>
               <div className="text-gray-200 text-sm"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
               <div className="text-gray-200 text-sm"><strong>Age:</strong> {profileData.age || 'NA'}</div>
-            </div>  
+            </div>
             <div className="mt-4 md:mt-6 bg-gray-700 text-gray-200 p-4 rounded-lg shadow-md">
               <h3 className="text-2xl font-semibold text-center text-primary mb-2">Goals</h3>
               <p className="text-center">{profileData.goals || 'No goals set yet'}</p>
