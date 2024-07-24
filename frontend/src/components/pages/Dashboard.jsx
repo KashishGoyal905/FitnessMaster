@@ -69,15 +69,15 @@ export default function Dashboard() {
         return (
             <div>
                 <Navbar />
-                <div className="flex w-[100vw] overflow-x-hidden">
-                    <div style={{ position: 'fixed', zIndex: 1000 }} className="relative top-[3.5rem] md:top-[4.7rem] h-screen w-[8vw]">
+                <div className="flex w-full overflow-x-hidden">
+                    <div style={{ position: 'fixed', zIndex: 1000 }} className="fixed z-1000 top-[3.5rem] md:top-[4.7rem] h-screen w-[14vw]">
                         <ResponsiveSidebar open={sidebarOpen} setOpen={setSidebarOpen} />
                     </div>
-                    <div style={{ overflowY: 'auto', height: '100vh' }} className="relative top-[3.5rem] md:top-[4.6em] md:left-[230px] p-4 w-full md:w-[84vw] overflow-hidden">
+                    <div className="relative top-14 md:top-20 md:left-[230px] p-4 w-full md:w-[84vw] h-screen overflow-auto">
                         <Outlet />
                     </div>
                 </div>
-                    {/* <button
+                {/* <button
                         onClick={() => setSidebarOpen(true)}
                         className="md:hidden fixed top-[4.5rem] left-4 z-50 bg-primary text-white p-2 rounded-md"
                     >
@@ -89,38 +89,16 @@ export default function Dashboard() {
 
     if (isAuthenticated && user.userRole === 'admin') {
         return (
-            <div className="flex h-screen bg-gray-100 pt-16">
-                <aside className="w-64 bg-gray-800 text-white">
-                    <div className="p-4">
-                        <h2 className="text-2xl font-bold">Admin Dashboard</h2>
+            <div>
+                <Navbar />
+                <div className="flex w-full overflow-x-hidden">
+                    <div style={{ position: 'fixed', zIndex: 1000 }} className="fixed z-1000 top-[3.5rem] md:top-[4.7rem] h-screen w-[14vw]">
+                        <ResponsiveSidebar open={sidebarOpen} setOpen={setSidebarOpen} />
                     </div>
-                    <nav className="p-4">
-                        <ul>
-                            <li className="mb-2">
-                                <Link to="/admin" className="hover:bg-gray-700 p-2 block">Dashboard Overview</Link>
-                            </li>
-                            <li className="mb-2">
-                                <Link to="/admin/classNamees" className="hover:bg-gray-700 p-2 block">Manage ClassNamclassNamees</Link>
-                            </li>
-                            <li className="mb-2">
-                                <Link to="/admin/instructors" className="hover:bg-gray-700 p-2 block">Manage Instructors</Link>
-                            </li>
-                            <li className="mb-2">
-                                <Link to="/admin/users" className="hover:bg-gray-700 p-2 block">Manage Users</Link>
-                            </li>
-                            <li className="mb-2">
-                                <Link to="/admin/reports" className="hover:bg-gray-700 p-2 block">Reports</Link>
-                            </li>
-                            <li className="mb-2">
-                                <Link to="/admin/settings" className="hover:bg-gray-700 p-2 block">Settings</Link>
-                            </li>
-                        </ul>
-                    </nav>
-                </aside>
-                <main className="flex-1 p-6">
-                    <h1 className="text-3xl font-bold mb-4">Dashboard Overview</h1>
-                    {/* Admin-specific content */}
-                </main>
+                    <div className="relative top-14 md:top-20 md:left-[230px] p-4 w-full md:w-[84vw] h-screen overflow-auto">
+                        <Outlet />
+                    </div>
+                </div>
             </div>
         );
     }
