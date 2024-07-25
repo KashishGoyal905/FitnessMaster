@@ -188,4 +188,15 @@ router.post('/update/:id', upload.single('image'), async function (req, res) {
     }
 });
 
+// Get all the users
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json({ users: users });
+    } catch (error) {
+        console.log('Backend', error);
+        res.status(500).json({ message: 'Failed to retrieve the users', error });
+    }
+});
+
 module.exports = router; //exporting the routes

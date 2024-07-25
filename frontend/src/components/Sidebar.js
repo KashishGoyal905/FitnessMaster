@@ -22,8 +22,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import authContext from '../context/AuthContext';
 
-const Sidebar = ({ open, onClose, userRole }) => {
+
+const Sidebar = ({ open, onClose }) => {
   const { user } = useContext(authContext);
+
+  const userRole = user.userRole; // Assuming user object has a 'role' property
+
   return (
     <Drawer
       variant="temporary"
@@ -34,7 +38,7 @@ const Sidebar = ({ open, onClose, userRole }) => {
       }}
     >
       <List>
-        {user.userRole === 'user' ? (
+        {userRole === 'user' && (
           <>
             <Link to={'/dashboard'} onClick={onClose}>
               <ListItem button>
@@ -63,16 +67,9 @@ const Sidebar = ({ open, onClose, userRole }) => {
               </ListItem>
             </Link>
           </>
-        ) : userRole === 'admin' ? (
+        )}
+        {userRole === 'admin' && (
           <>
-            <Link to={'/dashboard/create-class'} onClick={onClose}>
-              <ListItem button>
-                <ListItemIcon>
-                  <CreateIcon style={{ color: '#fff' }} />
-                </ListItemIcon>
-                <ListItemText primary="Create Class" />
-              </ListItem>
-            </Link>
             <Link to={'/dashboard/manage-users'} onClick={onClose}>
               <ListItem button>
                 <ListItemIcon>
@@ -81,21 +78,30 @@ const Sidebar = ({ open, onClose, userRole }) => {
                 <ListItemText primary="Manage Users" />
               </ListItem>
             </Link>
+            <Link to={'/dashboard/create-class'} onClick={onClose}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateIcon style={{ color: '#fff' }} />
+                </ListItemIcon>
+                <ListItemText primary="Create Class" />
+              </ListItem>
+            </Link>
           </>
-        ) : null}
+        )}
         <Divider />
       </List>
     </Drawer>
   );
 };
 
-const PermanentSidebar = ({ userRole }) => {
+const PermanentSidebar = () => {
   const { user } = useContext(authContext);
+  const userRole = user.userRole; 
 
   return (
     <div style={{ backgroundColor: '#2c2c2c', height: '100vh', color: '#fff' }}>
       <List>
-        {user.userRole === 'user' ? (
+        {userRole === 'user' && (
           <>
             <Link to={'/dashboard'}>
               <ListItem button>
@@ -124,16 +130,9 @@ const PermanentSidebar = ({ userRole }) => {
               </ListItem>
             </Link>
           </>
-        ) : userRole === 'admin' ? (
+        )}
+        {userRole === 'admin' && (
           <>
-            <Link to={'/dashboard/create-class'}>
-              <ListItem button>
-                <ListItemIcon>
-                  <CreateIcon style={{ color: '#fff' }} />
-                </ListItemIcon>
-                <ListItemText primary="Create Class" />
-              </ListItem>
-            </Link>
             <Link to={'/dashboard/manage-users'}>
               <ListItem button>
                 <ListItemIcon>
@@ -142,15 +141,23 @@ const PermanentSidebar = ({ userRole }) => {
                 <ListItemText primary="Manage Users" />
               </ListItem>
             </Link>
+            <Link to={'/dashboard/create-class'}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateIcon style={{ color: '#fff' }} />
+                </ListItemIcon>
+                <ListItemText primary="Create Class" />
+              </ListItem>
+            </Link>
           </>
-        ) : null}
+        )}
         <Divider />
       </List>
     </div>
   );
 };
 
-const ResponsiveSidebar = ({ open, setOpen, userRole }) => {
+const ResponsiveSidebar = ({ open, setOpen }) => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
@@ -158,7 +165,6 @@ const ResponsiveSidebar = ({ open, setOpen, userRole }) => {
       {isMobile ? (
         <>
           <IconButton
-            className=''
             color="inherit"
             aria-label="open drawer"
             edge="start"
@@ -167,10 +173,10 @@ const ResponsiveSidebar = ({ open, setOpen, userRole }) => {
           >
             <MenuIcon className='my-[42vh] m-2' />
           </IconButton>
-          <Sidebar open={open} onClose={() => setOpen(false)} userRole={userRole} />
+          <Sidebar open={open} onClose={() => setOpen(false)} />
         </>
       ) : (
-        <PermanentSidebar userRole={userRole} />
+        <PermanentSidebar />
       )}
     </>
   );

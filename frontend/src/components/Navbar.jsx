@@ -21,7 +21,11 @@ export default function Navbar() {
                     <li><NavLink to="/" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Home</NavLink></li>
                     <li><NavLink to="/instructor" className="mr-2 text-white hover:bg-primary hover:text-primary-content">About Me</NavLink></li>
                     <li><NavLink to="/classes" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Classes</NavLink></li>
-                    <li><NavLink to="/dashboard" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
+                    {(isAuthenticated && user.userRole === 'admin') ?
+                        <li><NavLink to="/dashboard/manage-users" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
+                        : <li><NavLink to="/dashboard" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
+                    }
+
                 </ul>
             </div>
             <div className="navbar-end">
@@ -43,7 +47,10 @@ export default function Navbar() {
                             <li><NavLink to="/" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Home</NavLink></li>
                             <li><NavLink to="/instructor" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>About Me</NavLink></li>
                             <li><NavLink to="/classes" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Classes</NavLink></li>
-                            <li><NavLink to="/dashboard" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Dashboard</NavLink></li>
+                            {(isAuthenticated && user.userRole === 'admin') ?
+                                <li><NavLink to="/dashboard/manage-users" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
+                                : <li><NavLink to="/dashboard" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
+                            }
                             {isAuthenticated && <li><NavLink to="/dashboard" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>{user.username}</NavLink></li>}
                             {isAuthenticated && <li><Link className="mb-2 hover:bg-primary hover:text-primary-content" onClick={() => { handleMenuClick(); logout() }}>Logout</Link></li>}
                             {!isAuthenticated && <li><NavLink to="/user/login" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Login</NavLink></li>}

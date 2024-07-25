@@ -14,6 +14,8 @@ import { AuthContextProvider } from './context/AuthContext';
 import UserWelcomeDashboard from './components/pages/UserWelcomeDashboard';
 import UserProfile from './components/pages/UserProfile';
 import UserClasses from './components/pages/UserClasses';
+import ManageUsers from './components/pages/ManageUsers';
+import CreateClass from './components/pages/CreateClass';
 
 
 const router = createBrowserRouter([
@@ -30,6 +32,8 @@ const router = createBrowserRouter([
       { path: '', element: <UserWelcomeDashboard /> },
       { path: 'profile', element: <UserProfile /> },
       { path: 'classes', element: <UserClasses /> },
+      { path: 'manage-users', element: <ManageUsers /> },
+      { path: 'create-class', element: <CreateClass /> },
     ]
   },
   { path: '/user/login', element: <Login /> },
