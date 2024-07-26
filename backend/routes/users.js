@@ -188,14 +188,49 @@ router.post('/update/:id', upload.single('image'), async function (req, res) {
     }
 });
 
+//! Admin
 // Get all the users
 router.get('/users', async (req, res) => {
     try {
-        const users = await User.find();
-        res.status(200).json({ users: users });
+        const users = await User.find({});
+        res.status(200).json({ userdata: users });
     } catch (error) {
         console.log('Backend', error);
         res.status(500).json({ message: 'Failed to retrieve the users', error });
+    }
+});
+
+// Delete the user
+router.delete('/:userId', async (req, res) => {
+    // Extracting id
+    const userId = req.params.userId;
+    // Debugging
+    console.log('userId of the user: ', userId);
+
+    try {
+        // Checking if User exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Failed to find the user' });
+        }
+
+        // Delete image from Cloudinary
+        if (user.avatar && user.avatarPublicId) {
+            cloudinary.uploader.destroy(user.avatarPublicId, (error, result) => {
+                if (error) {
+                    console.log('Error deleting user avatar from Cloudinary:', error);
+                } else {
+                    console.log('user avatar deleted from Cloudinary:', result);
+                }
+            });
+        }
+
+        // Deleting the user...
+        await User.findByIdAndDelete(userId);
+        return res.status(200).json({ message: 'User Deleted Successfully' });
+    } catch (error) {
+        console.log('Failed to delete the user | Backend', error);
+        res.status(500).json({ message: 'Failed to delete the user', error });
     }
 });
 
