@@ -201,7 +201,7 @@ router.get('/users', async (req, res) => {
 });
 
 // Delete the user
-router.delete('/:userId', async (req, res) => {
+router.delete('/delete/:userId', async (req, res) => {
     // Extracting id
     const userId = req.params.userId;
     // Debugging
@@ -231,6 +231,31 @@ router.delete('/:userId', async (req, res) => {
     } catch (error) {
         console.log('Failed to delete the user | Backend', error);
         res.status(500).json({ message: 'Failed to delete the user', error });
+    }
+});
+
+// Chnage the role of the user
+router.post('/changeRole/:userId', async (req, res) => {
+    // Extracting id
+    const userId = req.params.userId;
+    // Debugging
+    console.log('userId of the user: ', userId);
+
+    try {
+        // Checking if User exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Failed to find the user' });
+        }
+
+        // Toggle the user role
+        user.userRole = user.userRole === 'admin' ? 'user' : 'admin';
+        await user.save();
+        
+        return res.status(200).json({ message: 'User Role Changed Successfully' });
+    } catch (error) {
+        console.log('Failed to Update the role of the user| Backend', error);
+        res.status(500).json({ message: 'Failed to Update the role of the user', error });
     }
 });
 

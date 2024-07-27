@@ -1,0 +1,21 @@
+import { useContext, useEffect } from 'react';
+import authContext from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
+// Toast messages
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const useRoleRedirect = () => {
+    const { user } = useContext(authContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.userRole === 'user') {
+            toast.info("Already Logged In");
+            navigate('/');
+        }
+    }, [user, navigate]);
+};
+
+export default useRoleRedirect;
