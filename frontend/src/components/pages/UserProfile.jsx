@@ -2,8 +2,12 @@ import React, { useContext, useState } from 'react';
 import authContext from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useRoleRedirect from '../../middleware/useRoleRedirect';
 
 export default function UserProfile() {
+  // To restrict the user with 'admin' role to acess this page
+  useRoleRedirect(['user'], '/');
+
   const { user, updateFun } = useContext(authContext);
   const [profileData, setProfileData] = useState({
     username: user.username,

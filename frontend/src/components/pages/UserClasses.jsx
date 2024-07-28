@@ -1,6 +1,9 @@
 import React from 'react'
+import useRoleRedirect from '../../middleware/useRoleRedirect';
 
 export default function UserClasses() {
+  // To restrict the user with 'admin' role to acess this page
+  useRoleRedirect(['user'], '/');
   const classes = [
     { id: 1, name: 'Yoga Class', date: '27th June' },
     { id: 2, name: 'Cardio Class', date: '28th June' },

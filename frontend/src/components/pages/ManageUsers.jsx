@@ -6,9 +6,12 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import authContext from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import useRoleRedirect from '../../middleware/useRoleRedirect';
 
 export default function ManageUsers() {
-    
+    // To resstric the user with 'User' role to acess this page
+    useRoleRedirect(['admin'], '/');
+
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const { user, updateFun } = useContext(authContext);
@@ -68,9 +71,9 @@ export default function ManageUsers() {
             if (user._id === userId) {
                 const updatedUser = { ...user, userRole: user.userRole === 'admin' ? 'user' : 'admin' };
                 updateFun(updatedUser);
-                if (updatedUser.userRole === 'admin') { 
+                if (updatedUser.userRole === 'admin') {
                     navigate('/dashboard/manage-users');
-                }else{
+                } else {
                     navigate('/dashboard');
                 }
             }
