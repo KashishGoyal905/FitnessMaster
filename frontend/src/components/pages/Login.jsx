@@ -12,7 +12,7 @@ import useAuthRedirect from "../../middleware/useAuthRedirect";
 export default function Login() {
   // If the user is already logged in, it will redirect to main page.
   useAuthRedirect();
-  
+
   // Loading State
   const [isLoading, setIsLoading] = useState(false);
   // Login function from Context
@@ -55,6 +55,7 @@ export default function Login() {
       toast.success(resData.message || 'Logged In Succesfully');
       return navigate('/');
     } catch (err) {
+      setIsLoading(false);
       console.log('Failed to Login|Frontend: ', err.message);
       toast.error(err.message || 'Failed to Login');
       return;

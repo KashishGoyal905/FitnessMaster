@@ -13,6 +13,24 @@ const cloudinary = require('cloudinary').v2;
 const bcrypt = require('bcryptjs');
 // JWT for token
 const jwt = require('jsonwebtoken');
+const checkAuth = require('../middleware/check-auth');
+
+
+
+// Get User Details for the context
+router.get('/me', checkAuth, async (req, res) => {
+    const userId = req.user.userId;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ user: user });
+    } catch (error) {
+        console.log('Backend', error);
+        res.status(500).json({ message: 'Failed to retrieve the user Details', error });
+    }
+})
 
 // Register | SignUp
 router.post('/signup', upload.single('image'), async function (req, res) {
@@ -21,7 +39,7 @@ router.post('/signup', upload.single('image'), async function (req, res) {
     console.log('SignUp Usre File req: ', req.file);
 
     // Checking if all the fields exists or not
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !req.file) {
         return res.status(400).json({ message: 'All fields are required' });
     }
     // extra vallidation for the password
@@ -54,7 +72,7 @@ router.post('/signup', upload.single('image'), async function (req, res) {
         // Creating Token
         let token;
         token = jwt.sign(
-            { userId: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
+            { userId: savedUser._id, email: savedUser.email, userRole: savedUser.userRole }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         );
         console.log('Token for SignUp: ', token);
 
@@ -93,7 +111,7 @@ router.post('/login', async function (req, res) {
         // Creating Token
         let token;
         token = jwt.sign(
-            { userId: user._id, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
+            { userId: user._id, email: user.email, userRole: user.userRole }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         );
 
         user.isActive = true;
@@ -105,7 +123,7 @@ router.post('/login', async function (req, res) {
 });
 
 // User Details Update
-router.post('/update/:id', upload.single('image'), async function (req, res) {
+router.post('/update/:id', checkAuth, upload.single('image'), async function (req, res) {
     // Finding the user 
     const user = await User.findById(req.params.id);
     // Debugging
@@ -251,7 +269,7 @@ router.post('/changeRole/:userId', async (req, res) => {
         // Toggle the user role
         user.userRole = user.userRole === 'admin' ? 'user' : 'admin';
         await user.save();
-        
+
         return res.status(200).json({ message: 'User Role Changed Successfully' });
     } catch (error) {
         console.log('Failed to Update the role of the user| Backend', error);

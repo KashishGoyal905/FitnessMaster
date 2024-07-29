@@ -46,6 +46,7 @@ export default function SignUp() {
             toast.success(resData.message || 'User Created Succesfully');
             return navigate('/');
         } catch (err) {
+            setIsLoading(false);
             console.log('Failed to Sign Up|Frontend: ', err.message);
             toast.error(err.message || 'Failed to Sign Up');
             return;
