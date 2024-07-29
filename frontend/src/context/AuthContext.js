@@ -21,23 +21,51 @@ export const AuthContextProvider = ({ children }) => {
     });
 
     // user state | it will hold the details regarding the logged in user
-    const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
-    });
+    //* NEW
+    const [user, setUser] = useState(null);
+    //* OLD
+    // const [user, setUser] = useState(() => {
+    //     const storedUser = localStorage.getItem('user');
+    //     return storedUser ? JSON.parse(storedUser) : null;
+    // });
 
     useEffect(() => {
-        // extracting token and authenticated user from the localStorage
+        // extracting token from the localStorage
         const token = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
+        //* OLD
+        // const storedUser = localStorage.getItem('user');
 
+
+        //* New
+        // Fetch user details from the backend if token is present
+        const fetchUser = async () => {
+            if (token) {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/me`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
+                    const userData = await response.json();
+                    setIsAuthenticated(true);
+                    setUser(userData);
+                } catch (error) {
+                    console.error('Failed to fetch user data:', error);
+                    logout();
+                }
+            }
+        };
+
+        fetchUser();
+
+        //* OLD
         // if both are present i am setting the state
         // it is important to do because if we refresh the website then all the state will be lost
         // that's why whenever user refresh the website gather the details from the localStorage and set it.
-        if (token && storedUser) {
-            setIsAuthenticated(true);
-            setUser(JSON.parse(storedUser));
-        }
+        // if (token && storedUser) {
+        //     setIsAuthenticated(true);
+        //     setUser(JSON.parse(storedUser));
+        // }
 
         // token expiration
         const tokenExpirationTime = localStorage.getItem('tokenExpirationTime');
@@ -63,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
         const tokenExpirationTime = new Date().getTime() + 60 * 60 * 1000; // 1hr  from now
         localStorage.setItem('token', token);
         localStorage.setItem('tokenExpirationTime', tokenExpirationTime);
-        localStorage.setItem('user', JSON.stringify(user));
+        // localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
         setUser(user);
     };
@@ -72,7 +100,7 @@ export const AuthContextProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpirationTime');
-        localStorage.removeItem('user');
+        // localStorage.removeItem('user');
         setIsAuthenticated(false);
         setUser(null);
         toast.info('Logged out successfully!');
@@ -80,7 +108,7 @@ export const AuthContextProvider = ({ children }) => {
 
     // profile update function
     const updateFun = (updatedUser) => {
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+        // localStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
     }
 
