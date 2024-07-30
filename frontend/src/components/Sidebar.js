@@ -26,7 +26,7 @@ import authContext from '../context/AuthContext';
 const Sidebar = ({ open, onClose }) => {
   const { user } = useContext(authContext);
 
-  const userRole = user.userRole; // Assuming user object has a 'role' property
+  const userRole = user.userRole;
 
   return (
     <Drawer

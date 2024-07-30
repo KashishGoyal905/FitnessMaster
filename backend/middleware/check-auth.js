@@ -21,6 +21,7 @@ module.exports = (req, res, next) => {
         // adding an object to the req of user data
         req.user = decodedToken;
         // letting it pass to the next route
+        console.log("Passing to the next middleware, user data:", decodedToken)
         next();
     } catch (err) {
         console.log('Authentication failed from the check auth file', err);

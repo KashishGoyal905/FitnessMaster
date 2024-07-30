@@ -17,13 +17,20 @@ export default function ManageUsers() {
     const { user, updateFun } = useContext(authContext);
     const navigate = useNavigate();
 
+    // Extracting token from the localSotorage
+    const token = localStorage.getItem('token');
+
 
     useEffect(() => {
         // Fetch users from the API
         const fetchUsers = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/users`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
                 console.log(data.userdata);
                 setUsers(data.userdata);
@@ -37,7 +44,7 @@ export default function ManageUsers() {
         };
 
         fetchUsers();
-    }, []);
+    }, [token]);
 
     async function handleChangeRole(userId) {
         // Confirming
@@ -49,6 +56,7 @@ export default function ManageUsers() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
             });
             const resData = await response.json();
@@ -97,6 +105,7 @@ export default function ManageUsers() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
             });
             const resData = await response.json();

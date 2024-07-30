@@ -21,7 +21,7 @@ export default function Navbar() {
                     <li><NavLink to="/" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Home</NavLink></li>
                     <li><NavLink to="/instructor" className="mr-2 text-white hover:bg-primary hover:text-primary-content">About Me</NavLink></li>
                     <li><NavLink to="/classes" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Classes</NavLink></li>
-                    {(isAuthenticated && user.userRole === 'admin') ?
+                    {(isAuthenticated && user && user.userRole === 'admin') ?
                         <li><NavLink to="/dashboard/manage-users" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
                         : <li><NavLink to="/dashboard" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
                     }
@@ -30,7 +30,7 @@ export default function Navbar() {
             </div>
             <div className="navbar-end">
                 <div className="relative">
-                    {isAuthenticated &&
+                    {isAuthenticated && user &&
                         <Link to={`/dashboard`} className="hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>
                             <div className="hidden md:block avatar online md:m-2 md:mr-4">
                                 <div className="w-8 md:w-10 rounded-full">
@@ -47,11 +47,11 @@ export default function Navbar() {
                             <li><NavLink to="/" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Home</NavLink></li>
                             <li><NavLink to="/instructor" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>About Me</NavLink></li>
                             <li><NavLink to="/classes" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Classes</NavLink></li>
-                            {(isAuthenticated && user.userRole === 'admin') ?
+                            {(isAuthenticated && user && user.userRole === 'admin') ?
                                 <li><NavLink to="/dashboard/manage-users" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
                                 : <li><NavLink to="/dashboard" className="mr-2 text-white hover:bg-primary hover:text-primary-content">Dashboard</NavLink></li>
                             }
-                            {isAuthenticated && <li><NavLink to="/dashboard" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>{user.username}</NavLink></li>}
+                            {isAuthenticated && user && <li><NavLink to="/dashboard" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>{user.username}</NavLink></li>}
                             {isAuthenticated && <li><Link className="mb-2 hover:bg-primary hover:text-primary-content" onClick={() => { handleMenuClick(); logout() }}>Logout</Link></li>}
                             {!isAuthenticated && <li><NavLink to="/user/login" className="mb-2 hover:bg-primary hover:text-primary-content" onClick={handleMenuClick}>Login</NavLink></li>}
                         </ul>
