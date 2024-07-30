@@ -52,6 +52,7 @@ export default function Login() {
       e.target.reset();
       setIsLoading(false);
       login(resData.token, resData.user);
+      console.log(resData.user);
       toast.success(resData.message || 'Logged In Succesfully');
       return navigate('/');
     } catch (err) {

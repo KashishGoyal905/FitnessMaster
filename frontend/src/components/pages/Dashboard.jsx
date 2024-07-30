@@ -65,7 +65,7 @@ export default function Dashboard() {
         );
     }
 
-    if (isAuthenticated && user.userRole === 'user') {
+    if (isAuthenticated && user && user.userRole === 'user') {
         return (
             <div>
                 <Navbar />
@@ -87,7 +87,7 @@ export default function Dashboard() {
         )
     }
 
-    if (isAuthenticated && user.userRole === 'admin') {
+    if (isAuthenticated && user && user.userRole === 'admin') {
         return (
             <div>
                 <Navbar />

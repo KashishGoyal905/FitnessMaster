@@ -123,7 +123,7 @@ router.post('/login', async function (req, res) {
 });
 
 // User Details Update
-router.post('/update/:id', checkAuth, upload.single('image'), async function (req, res) {
+router.post('/update/:id', upload.single('image'), async function (req, res) {
     // Finding the user 
     const user = await User.findById(req.params.id);
     // Debugging
@@ -206,9 +206,10 @@ router.post('/update/:id', checkAuth, upload.single('image'), async function (re
     }
 });
 
+
 //! Admin
 // Get all the users
-router.get('/users', async (req, res) => {
+router.get('/users', checkAuth, async (req, res) => {
     try {
         const users = await User.find({});
         res.status(200).json({ userdata: users });
@@ -219,15 +220,20 @@ router.get('/users', async (req, res) => {
 });
 
 // Delete the user
-router.delete('/delete/:userId', async (req, res) => {
+router.delete('/delete/:userId', checkAuth, async (req, res) => {
     // Extracting id
     const userId = req.params.userId;
+    // extracting id of the logged in user
+    const loggedUserId = req.user.userId;
+
     // Debugging
     console.log('userId of the user: ', userId);
 
     try {
-        // Checking if User exists
         const user = await User.findById(userId);
+        const loggedUser = await User.findById(loggedUserId);
+
+        // Checking if User exists
         if (!user) {
             return res.status(404).json({ message: 'Failed to find the user' });
         }
@@ -243,8 +249,13 @@ router.delete('/delete/:userId', async (req, res) => {
             });
         }
 
-        // Deleting the user...
-        await User.findByIdAndDelete(userId);
+        // Checking if the user is Admin
+        if (loggedUser.userRole == 'admin') {
+            // Deleting the user...
+            await User.findByIdAndDelete(userId);
+        } else {
+            return res.status(404).json({ message: 'You are not authorized to perform this task' });
+        }
         return res.status(200).json({ message: 'User Deleted Successfully' });
     } catch (error) {
         console.log('Failed to delete the user | Backend', error);
@@ -252,23 +263,31 @@ router.delete('/delete/:userId', async (req, res) => {
     }
 });
 
-// Chnage the role of the user
-router.post('/changeRole/:userId', async (req, res) => {
-    // Extracting id
+// Change the role of the user
+router.post('/changeRole/:userId', checkAuth, async (req, res) => {
+    // Extracting id of the user whose role needs to be changed
     const userId = req.params.userId;
+    // extracting id of the logged in user
+    const loggedUserId = req.user.userId;
+
     // Debugging
     console.log('userId of the user: ', userId);
 
     try {
-        // Checking if User exists
         const user = await User.findById(userId);
+        const loggedUser = await User.findById(loggedUserId);
+        // Checking if User exists
         if (!user) {
             return res.status(404).json({ message: 'Failed to find the user' });
         }
 
-        // Toggle the user role
-        user.userRole = user.userRole === 'admin' ? 'user' : 'admin';
-        await user.save();
+        if (loggedUser.userRole == 'admin') {
+            // Toggle the user role
+            user.userRole = user.userRole === 'admin' ? 'user' : 'admin';
+            await user.save();
+        } else {
+            return res.status(404).json({ message: 'You are not authorized to perform this task' });
+        }
 
         return res.status(200).json({ message: 'User Role Changed Successfully' });
     } catch (error) {

@@ -46,11 +46,23 @@ export const AuthContextProvider = ({ children }) => {
                             'Authorization': `Bearer ${token}`,
                         },
                     });
+
+                    if (!response.ok) {
+                        console.log('Token is manipulated');
+                        toast.error('Token is Manipulated!');
+                        throw new Error('Token is Manipulated');
+                    }
+
                     const userData = await response.json();
-                    setIsAuthenticated(true);
-                    setUser(userData);
+                    if (userData.user) {
+                        setIsAuthenticated(true);
+                        setUser(userData.user);
+                    } else {
+                        logout();
+                    }
+
                 } catch (error) {
-                    console.error('Failed to fetch user data:', error);
+                    console.error(error.message || 'Failed to fetch user data:', error);
                     logout();
                 }
             }
