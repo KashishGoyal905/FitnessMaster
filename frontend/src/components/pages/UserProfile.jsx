@@ -37,11 +37,17 @@ export default function UserProfile() {
     const data = Object.fromEntries(fd.entries());
     console.log('User Update Details: ', data);
 
+    // Token for authorization || only logged in users with the right credentials should be able to update the profile
+    const token = localStorage.getItem('token');
+    
     try {
       setIsLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/update/${user._id}`, {
         method: 'POST',
         body: fd,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
 
       const resData = await response.json();
