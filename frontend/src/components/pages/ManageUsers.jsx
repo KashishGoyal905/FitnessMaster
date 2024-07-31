@@ -32,7 +32,13 @@ export default function ManageUsers() {
                     },
                 });
                 const data = await response.json();
-                console.log(data.userdata);
+
+                if (!response.ok) {
+                    setIsLoading(false);
+                    throw new Error(data.message || 'Failed to Delete the user');
+                }
+
+                console.log('All users: ', data.userdata);
                 setUsers(data.userdata);
                 setIsLoading(false);
             } catch (err) {
