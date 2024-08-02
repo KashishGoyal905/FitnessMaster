@@ -4,6 +4,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 // Toast messages
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import authContext from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import useRoleRedirect from '../../middleware/useRoleRedirect';
@@ -134,15 +135,16 @@ export default function ManageUsers() {
 
     return (
         <div className="p-6 bg-gray-900 min-h-screen text-white">
-            {isLoading &&
-                <div className="loading-overlay">
-                    <p className="relative">
-                        <span className="loading loading-dots loading-lg text-primary"></span>
-                    </p>
-                </div>
-            }
+
             <h2 className="text-2xl font-bold mb-6 text-center">Manage Users</h2>
             <div className="overflow-x-auto">
+                {isLoading &&
+                    <div className="loading-overlay">
+                        <p className="relative">
+                            <span className="loading loading-dots loading-lg text-primary"></span>
+                        </p>
+                    </div>
+                }
                 <table className="min-w-full bg-gray-800 rounded-lg shadow-md">
                     <thead>
                         <tr className="bg-gray-700 text-left">

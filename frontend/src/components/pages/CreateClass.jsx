@@ -1,5 +1,4 @@
-import React from 'react';
-// import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useRoleRedirect from '../../middleware/useRoleRedirect';
@@ -8,7 +7,7 @@ export default function CreateClass() {
   // Restrict access to this page to admin users only
   useRoleRedirect(['admin'], '/');
 
-  // const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateClass = async (e) => {
     e.preventDefault();
@@ -18,6 +17,7 @@ export default function CreateClass() {
     console.log('New Class Details: ', data);
 
     try {
+      setIsLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/class/create`, {
         method: 'POST',
         body: fd,
@@ -29,19 +29,29 @@ export default function CreateClass() {
       const resData = await response.json();
 
       if (!response.ok) {
+        setIsLoading(false);
         throw new Error(resData.message || 'Failed to create class');
       }
 
       toast.success('Class created successfully!');
+      setIsLoading(false);
       // navigate('/dashboard/manage-classes'); // Redirect to a classes management page if you have one
     } catch (error) {
       console.error('Error creating class:', error);
+      setIsLoading(false);
       toast.error(error.message || 'Failed to create class');
     }
   };
 
   return (
     <div className="p-6 bg-gray-900 min-h-screen text-white">
+      {isLoading &&
+        <div className="loading-overlay">
+          <p className="relative">
+            <span className="loading loading-dots loading-lg text-primary"></span>
+          </p>
+        </div>
+      }
       <h2 className="text-2xl font-bold mb-6 text-center">Create Class</h2>
       <form onSubmit={handleCreateClass} method='post' encType="multipart/form-data" className="max-w-2xl mx-auto p-4 bg-gray-800 rounded-lg shadow-md">
         <div className="mb-4">

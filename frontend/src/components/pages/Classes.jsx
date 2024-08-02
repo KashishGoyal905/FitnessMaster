@@ -68,8 +68,8 @@ export default function Classes() {
   // };
 
   // States to store classes based on phases
-  
-  
+
+
   const [morningClasses, setMorningClasses] = useState([]);
   const [afternoonClasses, setAfternoonClasses] = useState([]);
   const [eveningClasses, setEveningClasses] = useState([]);
@@ -129,6 +129,8 @@ export default function Classes() {
               description={classInfo.description}
               time={classInfo.time}
               instructor={classInfo.instructor}
+              cost={classInfo.cost}
+              id={classInfo._id}
             />
           ))}
         </div>
@@ -145,6 +147,8 @@ export default function Classes() {
               description={classInfo.description}
               time={classInfo.time}
               instructor={classInfo.instructor}
+              cost={classInfo.cost}
+              id={classInfo._id}
             />
           ))}
         </div>
@@ -161,6 +165,8 @@ export default function Classes() {
               description={classInfo.description}
               time={classInfo.time}
               instructor={classInfo.instructor}
+              cost={classInfo.cost}
+              id={classInfo._id}
             />
           ))}
         </div>
