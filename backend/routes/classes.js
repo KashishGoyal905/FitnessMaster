@@ -3,6 +3,7 @@ const router = express.Router(); // creating an instance of express router [to h
 
 // Class Schema
 const Class = require('../models/class_schema');
+const User = require('../models/user_schema');
 
 // Clodinary File to accept images
 const upload = require('../middleware/file-upload');
@@ -12,7 +13,7 @@ const cloudinary = require('cloudinary').v2;
 // Middleware to check the token
 const checkAuth = require('../middleware/check-auth');
 
-
+// Retrieve all the classes based on phase of the day
 router.get('/', async (req, res) => {
     const { phase } = req.query;
     try {
@@ -26,6 +27,8 @@ router.get('/', async (req, res) => {
 // Create a new class
 router.post('/create', checkAuth, upload.single('image'), async (req, res) => {
     const { title, description, instructor, time, cost, phase } = req.body;
+    // Extracting the Logged in  userRole
+    const userRole = req.user.userRole;
 
     // Debugging
     console.log('New Class Details Body: ', req.body);
@@ -33,6 +36,10 @@ router.post('/create', checkAuth, upload.single('image'), async (req, res) => {
 
     if (!title || !description || !instructor || !time || !cost || !phase || !req.file) {
         return res.status(400).json({ message: 'Please fill at least one field' });
+    }
+
+    if (!userRole === 'admin') {
+        return res.status(400).json({ message: 'You are not authorized to perform this task' });
     }
 
     let newClass;
@@ -57,5 +64,48 @@ router.post('/create', checkAuth, upload.single('image'), async (req, res) => {
     }
 });
 
+// Join a class
+router.post('/join/:classId', checkAuth, async (req, res) => {
+    // Class id: class which user is want to join
+    const classId = req.params.classId;
+    // User id: user who want to join the above class
+    const userId = req.user.userId;
+
+    try {
+        // Finding the class
+        const fitnessClass = await Class.findById(classId);
+        if (!fitnessClass) {
+            return res.status(404).json({ message: 'Class Not Found | Failed to join the class' });
+        }
+        // Finding the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User Not Found | Failed to join the class' });
+        }
+
+        // Check if the user is already enrolled in the class
+        if (user.enrolledClasses.includes(classId)) {
+            return res.status(400).json({ message: 'User is already enrolled in this class' });
+        }
+
+        // Check if the class already has the user enrolled
+        if (fitnessClass.enrolledUsers.includes(userId)) {
+            return res.status(400).json({ message: 'User is already enrolled in this class' });
+        }
+
+        // Add class to user's enrolled classes and user to class's enrolled users
+        user.enrolledClasses.push(classId);
+        fitnessClass.enrolledUsers.push(userId);
+
+        // Save changes to both documents
+        await user.save();
+        await fitnessClass.save();
+
+        res.status(200).json({ message: 'Class joined successfully' });
+    } catch (error) {
+        console.error('Error joining class:', error);
+        res.status(500).json({ message: 'Server error | Failed to join the class' });
+    }
+});
 
 module.exports = router; //exporting the routes

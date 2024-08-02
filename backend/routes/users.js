@@ -207,6 +207,23 @@ router.post('/update/:id', checkAuth, upload.single('image'), async function (re
     }
 });
 
+// Fetch enrolled classes
+router.get('/enrolled-classes', checkAuth, async (req, res) => {
+    const userId = req.user.userId;
+
+    try {
+        const user = await User.findById(userId).populate('enrolledClasses');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json({ enrolledClasses: user.enrolledClasses });
+    } catch (error) {
+        console.error('Error fetching enrolled classes:', error);
+        return res.status(500).json({ message: 'Server Error | Failed to fetch enrolled classes' });
+    }
+});
+
 
 //! Admin
 // Get all the users
