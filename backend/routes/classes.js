@@ -24,6 +24,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Retrieve all the classes for admin dashboard
+router.get('/getAllClasses', checkAuth, async (req, res) => {
+    const userRole = req.user.userRole;
+
+    if (!userRole === 'admin') {
+        res.status(500).json({ message: 'You are not authorized to perform this action' });
+    }
+    try {
+        const classes = await Class.find({});
+        res.status(200).json({ classes });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch classes', error });
+    }
+});
+
 // Create a new class
 router.post('/create', checkAuth, upload.single('image'), async (req, res) => {
     const { title, description, instructor, time, cost, phase } = req.body;
@@ -105,6 +120,28 @@ router.post('/join/:classId', checkAuth, async (req, res) => {
     } catch (error) {
         console.error('Error joining class:', error);
         res.status(500).json({ message: 'Server error | Failed to join the class' });
+    }
+});
+
+// Delete a class
+router.delete('/:classId', checkAuth, async (req, res) => {
+    const { classId } = req.params;
+    const userRole = req.user.userRole;
+
+    if (userRole !== 'admin') {
+        return res.status(403).json({ message: 'You are not authorized to delete classes' });
+    }
+
+    try {
+        const deletedClass = await Class.findByIdAndDelete(classId);
+
+        if (!deletedClass) {
+            return res.status(404).json({ message: 'Class not found' });
+        }
+
+        res.status(200).json({ message: 'Class deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to delete class', error });
     }
 });
 

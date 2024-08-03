@@ -86,6 +86,14 @@ const Sidebar = ({ open, onClose }) => {
                 <ListItemText primary="Create Class" />
               </ListItem>
             </Link>
+            <Link to={'/dashboard/manage-class'} onClick={onClose}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateIcon style={{ color: '#fff' }} />
+                </ListItemIcon>
+                <ListItemText primary="Manage Classes" />
+              </ListItem>
+            </Link>
           </>
         )}
         <Divider />
@@ -96,7 +104,7 @@ const Sidebar = ({ open, onClose }) => {
 
 const PermanentSidebar = () => {
   const { user } = useContext(authContext);
-  const userRole = user.userRole; 
+  const userRole = user.userRole;
 
   return (
     <div style={{ backgroundColor: '#2c2c2c', height: '100vh', color: '#fff' }}>
@@ -147,6 +155,14 @@ const PermanentSidebar = () => {
                   <CreateIcon style={{ color: '#fff' }} />
                 </ListItemIcon>
                 <ListItemText primary="Create Class" />
+              </ListItem>
+            </Link>
+            <Link to={'/dashboard/manage-class'}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateIcon style={{ color: '#fff' }} />
+                </ListItemIcon>
+                <ListItemText primary="Manage Classes" />
               </ListItem>
             </Link>
           </>
