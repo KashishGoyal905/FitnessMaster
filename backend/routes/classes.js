@@ -145,4 +145,41 @@ router.delete('/:classId', checkAuth, async (req, res) => {
     }
 });
 
+// Edit class
+router.post('/:classId', checkAuth, upload.single('image'), async (req, res) => {
+    const { classId } = req.params;
+    const { title, description, instructor, time, cost, phase } = req.body;
+
+    try {
+        const updateData = { title, description, instructor, time, cost, phase };
+
+        if (req.file) {
+            // Assuming req.file contains the uploaded file info from Cloudinary
+            updateData.image = req.file.path; // URL or path to the image
+            updateData.imagePublicId = req.file.filename; // Cloudinary public ID
+        }
+
+        const updatedClass = await Class.findByIdAndUpdate(classId, updateData, { new: true });
+
+        if (!updatedClass) {
+            return res.status(404).json({ message: 'Class not found' });
+        }
+
+        res.status(200).json({ message: 'Class updated successfully', class: updatedClass });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update class', error });
+    }
+});
+
+// Backend route to get enrolled users for a class
+router.get('/:id/users', async (req, res) => {
+    try {
+        const classData = await Class.findById(req.params.id).populate('enrolledUsers', 'username email contactNumber image userRole');
+        res.status(200).json({ enrolledUsers: classData.enrolledUsers });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch enrolled users' });
+    }
+});
+
+
 module.exports = router; //exporting the routes
