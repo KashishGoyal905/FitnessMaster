@@ -63,7 +63,7 @@ const Sidebar = ({ open, onClose }) => {
                   <InboxIcon style={{ color: '#fff' }} />
                 </ListItemIcon>
                 <ListItemText primary="Classes" />
-                <Badge badgeContent={3} color="secondary" />
+                {/* <Badge badgeContent={3} color="secondary" /> */}
               </ListItem>
             </Link>
           </>
@@ -134,7 +134,7 @@ const PermanentSidebar = () => {
                   <InboxIcon style={{ color: '#fff' }} />
                 </ListItemIcon>
                 <ListItemText primary="Classes" />
-                <Badge badgeContent={3} color="secondary" />
+                {/* <Badge badgeContent={3} color="secondary" /> */}
               </ListItem>
             </Link>
           </>

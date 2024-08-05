@@ -39,46 +39,6 @@ router.get('/getAllClasses', checkAuth, async (req, res) => {
     }
 });
 
-// Create a new class
-router.post('/create', checkAuth, upload.single('image'), async (req, res) => {
-    const { title, description, instructor, time, cost, phase } = req.body;
-    // Extracting the Logged in  userRole
-    const userRole = req.user.userRole;
-
-    // Debugging
-    console.log('New Class Details Body: ', req.body);
-    console.log('New Class File req: ', req.file);
-
-    if (!title || !description || !instructor || !time || !cost || !phase || !req.file) {
-        return res.status(400).json({ message: 'Please fill at least one field' });
-    }
-
-    if (!userRole === 'admin') {
-        return res.status(400).json({ message: 'You are not authorized to perform this task' });
-    }
-
-    let newClass;
-    try {
-        newClass = new Class({
-            title,
-            description,
-            instructor,
-            time,
-            cost,
-            phase,
-            image: req.file ? req.file.path : null, // Save the filename
-            imagePublicId: req.file ? req.file.filename : undefined // save the unique public id
-        });
-        console.log('Created Class', newClass);
-        const savedClass = await newClass.save();
-
-        res.status(200).json({ message: 'Class created successfully', class: savedClass });
-    } catch (error) {
-        console.log('Failed to create a new class|Backend', error);
-        res.status(500).json({ message: 'Failed to Create a new Class', error });
-    }
-});
-
 // Join a class
 router.post('/join/:classId', checkAuth, async (req, res) => {
     // Class id: class which user is want to join
@@ -123,7 +83,48 @@ router.post('/join/:classId', checkAuth, async (req, res) => {
     }
 });
 
-// Delete a class
+
+// Create a new class from the admin dashboard
+router.post('/create', checkAuth, upload.single('image'), async (req, res) => {
+    const { title, description, instructor, time, cost, phase } = req.body;
+    // Extracting the Logged in  userRole
+    const userRole = req.user.userRole;
+
+    // Debugging
+    console.log('New Class Details Body: ', req.body);
+    console.log('New Class File req: ', req.file);
+
+    if (!title || !description || !instructor || !time || !cost || !phase || !req.file) {
+        return res.status(400).json({ message: 'Please fill at least one field' });
+    }
+
+    if (!userRole === 'admin') {
+        return res.status(400).json({ message: 'You are not authorized to perform this task' });
+    }
+
+    let newClass;
+    try {
+        newClass = new Class({
+            title,
+            description,
+            instructor,
+            time,
+            cost,
+            phase,
+            image: req.file ? req.file.path : null, // Save the filename
+            imagePublicId: req.file ? req.file.filename : undefined // save the unique public id
+        });
+        console.log('Created Class', newClass);
+        const savedClass = await newClass.save();
+
+        res.status(200).json({ message: 'Class created successfully', class: savedClass });
+    } catch (error) {
+        console.log('Failed to create a new class|Backend', error);
+        res.status(500).json({ message: 'Failed to Create a new Class', error });
+    }
+});
+
+// Delete a class from the admin dashboard
 router.delete('/:classId', checkAuth, async (req, res) => {
     const { classId } = req.params;
     const userRole = req.user.userRole;
@@ -145,7 +146,7 @@ router.delete('/:classId', checkAuth, async (req, res) => {
     }
 });
 
-// Edit class
+// Edit a class from the admin dashboard
 router.post('/:classId', checkAuth, upload.single('image'), async (req, res) => {
     const { classId } = req.params;
     const { title, description, instructor, time, cost, phase } = req.body;
@@ -171,7 +172,7 @@ router.post('/:classId', checkAuth, upload.single('image'), async (req, res) => 
     }
 });
 
-// Backend route to get enrolled users for a class
+// Backend route to get enrolled users for a class from the admin dashboard
 router.get('/:id/users', async (req, res) => {
     try {
         const classData = await Class.findById(req.params.id).populate('enrolledUsers', 'username email contactNumber image userRole');
