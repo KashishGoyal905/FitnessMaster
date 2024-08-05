@@ -3,12 +3,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Avatar, List, ListItem, Typography } from '@mui/material';
 
 
 export default function ManageClasses() {
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Edit Class
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedClass, setSelectedClass] = useState(null);
 
@@ -196,51 +198,68 @@ export default function ManageClasses() {
                 ))}
             </div>
 
+
             <Dialog open={openUserDialog} onClose={() => setOpenUserDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Enrolled Users</DialogTitle>
+                <DialogTitle className="bg-gray-900 text-white">
+                    <Typography variant="h6" component="div" className="font-bold">
+                        Enrolled Users
+                    </Typography>
+                </DialogTitle>
                 <DialogContent dividers className="bg-gray-800">
                     {enrolledUsers.length > 0 ? (
                         <List>
                             {enrolledUsers.map((user) => (
-                                <ListItem key={user._id} className="hover:bg-gray-700 transition duration-300">
-                                    <ListItemAvatar>
-                                        <Avatar src={user.image} alt={user.username} />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={user.username}
-                                        secondary={
-                                            <>
-                                                <span>Email: {user.email}</span><br />
-                                                <span>Mobile: {user.contactNumber || 'Not Available'}</span><br />
-                                                <span>Role: {user.userRole}</span>
-                                            </>
-                                        }
-                                        style={{ color: 'white' }}
+                                <ListItem key={user._id} className="hover:bg-gray-700 transition duration-300 flex items-center space-x-4 py-4">
+                                    <Avatar
+                                        src={user.image || 'default-avatar-url'}
+                                        alt={user.username}
+                                        className="border-2 border-gray-500"
                                     />
+                                    <div className="flex flex-col">
+                                        <Typography variant="body1" component="span" className="text-white font-bold">
+                                            {user.username}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex-1">
+                                        <Typography variant="body2" component="span" className="text-gray-300">
+                                            <span className="font-bold">Email:</span> {user.email}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex-1">
+                                        <Typography variant="body2" component="span" className="text-gray-300">
+                                            <span className="font-bold">Mobile:</span> {user.contactNumber || 'Not Available'}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex-1">
+                                        <Typography variant="body2" component="span" className="text-gray-300">
+                                            <span className="font-bold">Role:</span> {user.userRole}
+                                        </Typography>
+                                    </div>
                                 </ListItem>
                             ))}
                         </List>
                     ) : (
-                        <p className="text-white">No users enrolled in this class.</p>
+                        <Typography variant="body1" component="p" className="text-white text-center">
+                            No users enrolled in this class.
+                        </Typography>
                     )}
                 </DialogContent>
                 <DialogActions className="bg-gray-900">
-                    <Button onClick={() => setOpenUserDialog(false)} style={{ color: 'white', backgroundColor: '#6b7280' }}>
+                    <Button
+                        onClick={() => setOpenUserDialog(false)}
+                        style={{ color: 'white', backgroundColor: '#4A5568' }}
+                        className="hover:bg-gray-600 transition duration-200"
+                    >
                         Close
                     </Button>
                 </DialogActions>
             </Dialog>
 
+
             {selectedClass && (
-                <Dialog
-                    open={openDialog}
-                    onClose={handleCloseDialog}
-                    PaperProps={{
-                        style: {
-                            backgroundColor: '#1a202c', // Tailwind's bg-gray-900
-                            color: 'white', // Tailwind's text-white
-                        },
-                    }}
+                <Dialog open={openDialog} onClose={handleCloseDialog} PaperProps={{
+                    style: { backgroundColor: '#1a202c', color: 'white', },
+                }}
                 >
                     <DialogTitle>Edit Class</DialogTitle>
                     <DialogContent>
