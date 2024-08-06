@@ -209,33 +209,37 @@ export default function ManageClasses() {
                     {enrolledUsers.length > 0 ? (
                         <List>
                             {enrolledUsers.map((user) => (
-                                <ListItem key={user._id} className="hover:bg-gray-700 transition duration-300 flex items-center space-x-4 py-4">
-                                    <Avatar
-                                        src={user.image || 'default-avatar-url'}
-                                        alt={user.username}
-                                        className="border-2 border-gray-500"
-                                    />
-                                    <div className="flex flex-col">
-                                        <Typography variant="body1" component="span" className="text-white font-bold">
-                                            {user.username}
-                                        </Typography>
-                                    </div>
-                                    <div className="flex-1">
-                                        <Typography variant="body2" component="span" className="text-gray-300">
-                                            <span className="font-bold">Email:</span> {user.email}
-                                        </Typography>
-                                    </div>
-                                    <div className="flex-1">
-                                        <Typography variant="body2" component="span" className="text-gray-300">
-                                            <span className="font-bold">Mobile:</span> {user.contactNumber || 'Not Available'}
-                                        </Typography>
-                                    </div>
-                                    <div className="flex-1">
-                                        <Typography variant="body2" component="span" className="text-gray-300">
-                                            <span className="font-bold">Role:</span> {user.userRole}
-                                        </Typography>
-                                    </div>
-                                </ListItem>
+                                <>
+                                    <ListItem key={user._id} className="hover:bg-gray-700 transition duration-300 flex items-center space-x-4 py-4">
+                                        <Avatar
+                                            src={user.image || 'default-avatar-url'}
+                                            alt={user.username}
+                                            className="border-2 border-gray-500"
+                                        />
+                                        <div className="flex flex-col">
+                                            <Typography variant="body1" component="span" className="text-white font-bold">
+                                                {user.username}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex-1">
+                                            <Typography variant="body2" component="span" className="text-gray-300">
+                                                <span className="font-bold">Email:</span> {user.email}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex-1">
+                                            <Typography variant="body2" component="span" className="text-gray-300">
+                                                <span className="font-bold">Mobile:</span> {user.contactNumber || 'Not Available'}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex-1">
+                                            <Typography variant="body2" component="span" className="text-gray-300">
+                                                <span className="font-bold">Role:</span> {user.userRole}
+                                            </Typography>
+                                        </div>
+                                        <hr />
+                                    </ListItem>
+                                    <hr />
+                                </>
                             ))}
                         </List>
                     ) : (

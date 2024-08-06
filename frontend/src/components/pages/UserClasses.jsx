@@ -37,6 +37,32 @@ export default function UserClasses() {
     fetchEnrolledClasses();
   }, [token]);
 
+  // UnEnroll from the class
+  async function handleUnEnroll(classId) {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/Unenroll/${classId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to Unenroll from the class');
+      }
+
+      // Correctly update the state by filtering out the unenrolled class
+      setEnrolledClasses(prevEnrolledClasses => prevEnrolledClasses.filter(c => c._id !== classId));  
+      toast.success(data.message || 'Successfully Unenrolled from the class');
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      console.error('Failed to Unenroll from the class:', err.message);
+      toast.error(err.message || 'Failed to Unenroll from the class');
+    }
+  }
 
   return (
     <div className="p-6 bg-gray-900 min-h-screen text-white">
@@ -60,6 +86,12 @@ export default function UserClasses() {
               <p className="text-center font-semibold mb-2">Time: {classData.time}</p>
               <p className="text-center mb-4">Instructor: {classData.instructor}</p>
             </div>
+            <button
+              onClick={() => handleUnEnroll(classData._id)}
+              className="bg-red-700 w-1/2 mx-auto text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-200 transform hover:scale-105"
+            >
+              Unenroll
+            </button>
           </div>
         ))}
       </div>

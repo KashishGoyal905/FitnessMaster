@@ -173,7 +173,7 @@ router.post('/:classId', checkAuth, upload.single('image'), async (req, res) => 
 });
 
 // Backend route to get enrolled users for a class from the admin dashboard
-router.get('/:id/users', async (req, res) => {
+router.get('/:id/users', checkAuth, async (req, res) => {
     try {
         const classData = await Class.findById(req.params.id).populate('enrolledUsers', 'username email contactNumber image userRole');
         res.status(200).json({ enrolledUsers: classData.enrolledUsers });
