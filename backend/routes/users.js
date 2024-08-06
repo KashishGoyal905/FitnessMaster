@@ -3,6 +3,7 @@ const router = express.Router(); // creating an instance of express router [to h
 
 // userSchema
 const User = require('../models/user_schema');
+const Class = require('../models/class_schema');
 
 // Clodinary File to accept images
 const upload = require('../middleware/file-upload');
@@ -223,6 +224,43 @@ router.get('/enrolled-classes', checkAuth, async (req, res) => {
         return res.status(500).json({ message: 'Server Error | Failed to fetch enrolled classes' });
     }
 });
+
+
+// Unenroll from the class
+router.post('/Unenroll/:classId', checkAuth, async (req, res) => {
+    const enrolledClassId = req.params.classId;
+    const enrolledUserId = req.user.userId;
+
+    const enrolledClass = await Class.findById(enrolledClassId);
+    const enrolledUser = await User.findById(enrolledUserId);
+
+    try {
+        if (!enrolledUser || !enrolledClass) {
+            return res.status(404).json({ message: 'Class or User not found' });
+        }
+
+        // Remove user from the class's enrolledUsers array
+        enrolledClass.enrolledUsers = enrolledClass.enrolledUsers.filter(
+            userId => !userId.equals(enrolledUserId)
+        );
+
+        // Remove class from the user's enrolledClasses array
+        enrolledUser.enrolledClasses = enrolledUser.enrolledClasses.filter(
+            classId => !classId.equals(enrolledClassId)
+        );
+
+        // Save the updates
+        await enrolledClass.save();
+        await enrolledUser.save();
+
+        res.status(200).json({ message: 'Successfully unenrolled from the class' });
+
+    } catch (error) {
+        console.error('Failed to Uneroll from the class:', error);
+        return res.status(500).json({ message: 'Server Error | Failed to Uneroll from the class' });
+    }
+});
+
 
 
 //! Admin
