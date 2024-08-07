@@ -77,6 +77,11 @@ router.post('/signup', upload.single('image'), async function (req, res) {
         );
         console.log('Token for SignUp: ', token);
 
+        // To handle the isActive and lastLogin functionality
+        user.isActive = true;
+        user.lastLogin = new Date();
+        await user.save();
+
         res.status(200).json({ message: 'Account created successfully', user: savedUser, token: token });
     } catch (error) {
         console.log('Backend', error);
@@ -115,13 +120,36 @@ router.post('/login', async function (req, res) {
             { userId: user._id, email: user.email, userRole: user.userRole }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         );
 
+        // To handle the isActive and lastLogin functionality
         user.isActive = true;
+        user.lastLogin = new Date();
+        await user.save();
+
         return res.status(200).json({ message: 'Logged in successfully', user: user, token: token });
     } catch (error) {
         console.log('Error loggin in the user|Backend: ', error);
         return res.status(500).json({ message: 'Failed to Login', error });
     }
 });
+
+// Logout
+router.post('/logout', checkAuth, async function (req, res) {
+    try {
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.isActive = false;
+        await user.save();
+
+        return res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.log('Error logging out the user|Backend: ', error);
+        return res.status(500).json({ message: 'Failed to Logout', error });
+    }
+});
+
 
 // User Details Update
 router.post('/update/:id', checkAuth, upload.single('image'), async function (req, res) {

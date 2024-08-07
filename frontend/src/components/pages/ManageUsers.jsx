@@ -153,6 +153,7 @@ export default function ManageUsers() {
                             <th className="py-3 px-6 border-b border-gray-600">Email</th>
                             <th className="py-3 px-6 border-b border-gray-600">Mobile Number</th>
                             <th className="py-3 px-6 border-b border-gray-600">Role</th>
+                            <th className="py-3 px-6 border-b border-gray-600">Last Login</th>
                             <th className="py-3 px-6 border-b border-gray-600">Actions</th>
                         </tr>
                     </thead>
@@ -160,12 +161,20 @@ export default function ManageUsers() {
                         {users && users.map(user => (
                             <tr key={user._id} className="hover:bg-gray-700 transition duration-300">
                                 <td className="py-3 px-6 border-b border-gray-600 flex items-center">
-                                    <img src={user.image} alt="" className='w-10 h-10 rounded-full border-2 border-gray-500' />
+                                    {user.isActive ?
+                                        <div className='avatar online w-12 h-12'>
+                                            <img src={user.image} alt="" className='w-12 h-12 rounded-full border-2 border-gray-500' />
+                                        </div> :
+                                        <div className='avatar offline w-12 h-12'>
+                                            <img src={user.image} alt="" className='w-12 h-12 rounded-full border-2 border-gray-500' />
+                                        </div>
+                                    }
                                 </td>
                                 <td className="py-3 px-6 border-b border-gray-600">{user.username}</td>
                                 <td className="py-3 px-6 border-b border-gray-600">{user.email}</td>
                                 <td className="py-3 px-6 border-b border-gray-600">{user.contactNumber || 'Not Available'}</td>
                                 <td className="py-3 px-6 border-b border-gray-600">{user.userRole}</td>
+                                <td className="py-3 px-6 border-b border-gray-600">{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never'}</td>
                                 <td className="py-3 px-6 border-b border-gray-600 flex space-x-2">
                                     <button
                                         onClick={() => handleChangeRole(user._id)}
