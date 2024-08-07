@@ -109,7 +109,16 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     // logout
-    const logout = () => {
+    const logout = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+        }
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpirationTime');
         // localStorage.removeItem('user');
