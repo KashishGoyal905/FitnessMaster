@@ -6,6 +6,7 @@ import luffy2 from '../../images/Home4.jpg';
 import Zoro1 from '../../images/Home5.jpg';
 import luffy5 from '../../images/Home8.avif';
 import image from '../../images/Home.png'
+import BMICalculator from '../BMICalculator';
 
 export default function Home() {
   return (
@@ -37,6 +38,11 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <hr />
+      {/* BMI Calculator */}
+      <BMICalculator />
+
 
       {/* Future Photo Gallery Section */}
       <div className="container mx-auto py-6 md:py-12">
