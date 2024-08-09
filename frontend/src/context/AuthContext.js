@@ -1,83 +1,63 @@
 import { createContext, useEffect, useState } from "react";
+// Toastify
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Context Api to handle the authentication and authorization throughout the website
 const authContext = createContext({
     isAuthenticated: '',
-    login: () => { },
     user: null,
-    update: () => { },
+    login: () => { },
     logout: () => { },
+    update: () => { },
 });
 
 // export function authContextProvider({ children }) {
 export const AuthContextProvider = ({ children }) => {
-
     // isAuthenticated state to check if the user is authenticated or not
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         const token = localStorage.getItem('token');
+        // to convert it into a boolean value
         return !!token;
     });
 
     // user state | it will hold the details regarding the logged in user
-    //* NEW
     const [user, setUser] = useState(null);
-    //* OLD
-    // const [user, setUser] = useState(() => {
-    //     const storedUser = localStorage.getItem('user');
-    //     return storedUser ? JSON.parse(storedUser) : null;
-    // });
 
+    // It will be executed after the first time component mounting and after that in refrehes
     useEffect(() => {
         // extracting token from the localStorage
         const token = localStorage.getItem('token');
-        //* OLD
-        // const storedUser = localStorage.getItem('user');
 
-
-        //* New
         // Fetch user details from the backend if token is present
         const fetchUser = async () => {
             if (token) {
                 try {
+                    // Req to grab the details of the user from the mongoDb whose token is present in localStorage
                     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/me`, {
                         headers: {
+                            // Security check
                             'Authorization': `Bearer ${token}`,
                         },
                     });
+                    const userData = await response.json();
 
                     if (!response.ok) {
-                        console.log('Token is manipulated');
-                        toast.error('Token is Manipulated!');
-                        throw new Error('Token is Manipulated');
+                        toast.error(userData.message | 'Token is Manipulated!');
+                        throw new Error(userData | 'Token is Manipulated');
                     }
 
-                    const userData = await response.json();
-                    if (userData.user) {
-                        setIsAuthenticated(true);
-                        setUser(userData.user);
-                    } else {
-                        logout();
-                    }
-
+                    // Setting the details extracted from the DB
+                    setIsAuthenticated(true);
+                    setUser(userData.user);
                 } catch (error) {
-                    console.error(error.message || 'Failed to fetch user data:', error);
+                    console.log(error.message || 'Failed to fetch user data:', error);
                     logout();
                 }
             }
         };
 
         fetchUser();
-
-        //* OLD
-        // if both are present i am setting the state
-        // it is important to do because if we refresh the website then all the state will be lost
-        // that's why whenever user refresh the website gather the details from the localStorage and set it.
-        // if (token && storedUser) {
-        //     setIsAuthenticated(true);
-        //     setUser(JSON.parse(storedUser));
-        // }
 
         // token expiration
         const tokenExpirationTime = localStorage.getItem('tokenExpirationTime');
@@ -98,12 +78,12 @@ export const AuthContextProvider = ({ children }) => {
         return () => clearInterval(intervalId);
     }, []);
 
+
     // Login funciton | as soon as the user logs in setting the details in the localStorage & state
     const login = (token, user) => {
         const tokenExpirationTime = new Date().getTime() + 60 * 60 * 1000; // 1hr  from now
         localStorage.setItem('token', token);
         localStorage.setItem('tokenExpirationTime', tokenExpirationTime);
-        // localStorage.setItem('user', JSON.stringify(user));
         setIsAuthenticated(true);
         setUser(user);
     };
@@ -121,7 +101,6 @@ export const AuthContextProvider = ({ children }) => {
         }
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpirationTime');
-        // localStorage.removeItem('user');
         setIsAuthenticated(false);
         setUser(null);
         toast.info('Logged out successfully!');
@@ -129,12 +108,12 @@ export const AuthContextProvider = ({ children }) => {
 
     // profile update function
     const updateFun = (updatedUser) => {
-        // localStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
     }
 
     return (
-        <authContext.Provider value={{ isAuthenticated, login, logout, updateFun, user }}>
+        // The `children` component now has access to fields and functions present in the value object.
+        <authContext.Provider value={{ isAuthenticated, user, login, logout, updateFun }}>
             {children}
         </authContext.Provider>
     );
