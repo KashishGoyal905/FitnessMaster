@@ -26,6 +26,7 @@ const userSchema = new Schema({
     gender: { type: String, enum: ['male', 'female', 'other'] }, // User's gender
     goals: { type: String }, // User's fitness goals
     enrolledClasses: [{ type: Schema.Types.ObjectId, ref: 'Class' }], // References to classes the user is enrolled in
+    attendance: [{ date: Date, status: { type: String, enum: ['present', 'absent'] } }], // Array of dates where attendance is marked
 }, { timestamps: true }); // to add createdAt and updatedAt
 
 
