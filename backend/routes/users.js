@@ -290,6 +290,35 @@ router.post('/Unenroll/:classId', checkAuth, async (req, res) => {
 });
 
 
+// Attendabce
+// POST /api/attendance/:userId
+router.post('/mark-attendance/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { date, status } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        user.attendance.push({ date, status });
+        await user.save();
+        res.status(200).json({ date, status });
+    } catch (err) {
+        res.status(500).json({ error: 'Error marking attendance' });
+    }
+});
+
+// GET /api/attendance/:userId
+router.get('/check-attendance/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const user = await User.findById(userId);
+        res.status(200).json({ attendance: user.attendance });
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching attendance' });
+    }
+});
+
+
 
 //! Admin
 // Get all the users
