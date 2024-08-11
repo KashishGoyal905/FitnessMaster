@@ -61,6 +61,10 @@ export const AuthContextProvider = ({ children }) => {
 
         // token expiration
         const tokenExpirationTime = localStorage.getItem('tokenExpirationTime');
+        if (!tokenExpirationTime) {
+            return;
+        }
+
         if (tokenExpirationTime && new Date().getTime() > tokenExpirationTime) {
             logout();
         }
@@ -72,7 +76,7 @@ export const AuthContextProvider = ({ children }) => {
             }
         };
 
-        const intervalId = setInterval(checkTokenExpiration, 1000); // Check every second
+        const intervalId = setInterval(checkTokenExpiration, 60000); // Check every 60 second
 
         // cleanup funciton
         return () => clearInterval(intervalId);
