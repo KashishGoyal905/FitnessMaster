@@ -40,7 +40,7 @@ export default function SignUp() {
                 throw new Error(resData.message || 'Failed to Sign Up');
             }
 
-            e.target.reset();
+            // e.target.reset();
             setIsLoading(false);
             login(resData.token, resData.user);
             toast.success(resData.message || 'User Created Succesfully');
@@ -153,7 +153,7 @@ export default function SignUp() {
                 <img
                     className="absolute inset-0 p-16 h-full w-full"
                     src={img}
-                    alt=""
+                    alt="workoutAvatar"
                 />
                 {/* <Link href="https://storyset.com/sport">Sport illustrations by Storyset</Link> */}
             </div>

@@ -18,9 +18,11 @@ const checkAuth = require('../middleware/check-auth');
 
 
 
-// Get User Details for the context
+// Get User Details for the context --Done
 router.get('/me', checkAuth, async (req, res) => {
+    // Extracting form the checkAuth middleware
     const userId = req.user.userId;
+    
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -132,7 +134,7 @@ router.post('/login', async function (req, res) {
     }
 });
 
-// Logout
+// Logout -- Done
 router.post('/logout', checkAuth, async function (req, res) {
     try {
         const user = await User.findById(req.user.userId);
@@ -291,7 +293,6 @@ router.post('/Unenroll/:classId', checkAuth, async (req, res) => {
 
 
 // Attendabce
-// POST /api/attendance/:userId
 router.post('/mark-attendance/:userId', async (req, res) => {
     const { userId } = req.params;
     const { date, status } = req.body;
@@ -306,7 +307,6 @@ router.post('/mark-attendance/:userId', async (req, res) => {
     }
 });
 
-// GET /api/attendance/:userId
 router.get('/check-attendance/:userId', async (req, res) => {
     const { userId } = req.params;
 
