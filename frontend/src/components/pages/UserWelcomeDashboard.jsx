@@ -6,52 +6,49 @@ import authContext from '../../context/AuthContext';
 export default function UserWelcomeDashboard() {
   const { user } = useContext(authContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [attendanceMarked, setAttendanceMarked] = useState(false);
+  const [attendance, setAttendance] = useState([]);
 
-  // Fetch the attendance status for today when the component mounts
+  // Fetch attendance history on component mount
   useEffect(() => {
-    const fetchAttendanceStatus = async () => {
+    const fetchAttendance = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/check-attendance/${user._id}`, {
-          method: 'POST',
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/attendance/${user._id}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
-          body: JSON.stringify({ date: new Date().toDateString() })
         });
 
         const data = await response.json();
         if (response.ok) {
-          setAttendanceMarked(data.attendanceMarked);
+          setAttendance(data.attendance);
         } else {
-          console.error('Failed to fetch attendance status:', data.message);
+          console.error('Failed to fetch attendance:', data.message);
         }
       } catch (err) {
-        console.error('Error fetching attendance status:', err.message);
+        console.error('Error fetching attendance:', err.message);
       }
     };
 
-    fetchAttendanceStatus();
-  });
+    fetchAttendance();
+  }, [user._id]);
 
-  // Function to handle attendance marking
+  // Mark attendance for today
   const markAttendance = async (date) => {
-    // Allow marking attendance only for today
     if (new Date().toDateString() === date.toDateString()) {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/mark-attendance/${user._id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
-          body: JSON.stringify({ date: date.toDateString(), status: 'present' }) // Include status
+          body: JSON.stringify({ date: date.toDateString(), status: 'present' }),
         });
 
         const data = await response.json();
         if (response.ok) {
-          setAttendanceMarked(true);
+          setAttendance([...attendance, { date: date.toDateString(), status: 'present' }]);
           alert(`Attendance marked for ${date.toDateString()}`);
         } else {
           throw new Error(data.message || 'Failed to mark attendance');
@@ -63,6 +60,26 @@ export default function UserWelcomeDashboard() {
     } else {
       alert('You can only mark attendance for today.');
     }
+  };
+
+  // Determine tile content based on attendance
+  const tileContent = ({ date, view }) => {
+    if (view === 'month') {
+      const attendanceForDate = attendance.find(
+        (att) => new Date(att.date).toDateString() === date.toDateString()
+      );
+
+      if (attendanceForDate) {
+        return (
+          <div
+            className={`flex justify-center items-center rounded-full w-4 h-4 mx-auto mt-1 
+              ${attendanceForDate.status === 'present' ? 'bg-green-500' : 'bg-red-500'}
+            `}
+          ></div>
+        );
+      }
+    }
+    return null;
   };
 
   return (
@@ -80,7 +97,9 @@ export default function UserWelcomeDashboard() {
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
-            className="bg-white rounded-lg text-black"
+
+            className="bg-slate-950 rounded-lg text-black"
+            tileContent={tileContent}
             onClickDay={(date) => markAttendance(date)}
           />
         </div>
@@ -89,7 +108,7 @@ export default function UserWelcomeDashboard() {
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Mark Attendance</h2>
           {new Date().toDateString() === selectedDate.toDateString() ? (
-            attendanceMarked ? (
+            attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
               <p className="text-green-500 text-xl">Attendance already marked for today!</p>
             ) : (
               <button
