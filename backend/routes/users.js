@@ -292,7 +292,7 @@ router.post('/Unenroll/:classId', checkAuth, async (req, res) => {
 });
 
 
-// Attendabce
+// Attendance
 router.post('/mark-attendance/:userId', async (req, res) => {
     const { userId } = req.params;
     const { date, status } = req.body;
@@ -307,7 +307,7 @@ router.post('/mark-attendance/:userId', async (req, res) => {
     }
 });
 
-router.get('/check-attendance/:userId', async (req, res) => {
+router.get('/attendance/:userId', async (req, res) => {
     const { userId } = req.params;
 
     try {
