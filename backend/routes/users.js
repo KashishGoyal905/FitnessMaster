@@ -22,7 +22,7 @@ const checkAuth = require('../middleware/check-auth');
 router.get('/me', checkAuth, async (req, res) => {
     // Extracting form the checkAuth middleware
     const userId = req.user.userId;
-    
+
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -293,30 +293,55 @@ router.post('/Unenroll/:classId', checkAuth, async (req, res) => {
 
 
 // Attendance
-router.post('/mark-attendance/:userId', async (req, res) => {
+router.post('/mark-attendance/:userId', checkAuth, async (req, res) => {
     const { userId } = req.params;
     const { date, status } = req.body;
 
     try {
         const user = await User.findById(userId);
-        user.attendance.push({ date, status });
+
+        // Check if attendance for today is already marked
+        const existingAttendance = user.attendance.find(att => new Date(att.date).toDateString() === new Date(date).toDateString());
+
+        if (!existingAttendance) {
+            user.attendance.push({ date, status });
+        } else {
+            return res.status(400).json({ message: 'Attendance for today is already marked' });
+        }
+
         await user.save();
-        res.status(200).json({ date, status });
+        return res.status(200).json({ date, status });
     } catch (err) {
-        res.status(500).json({ error: 'Error marking attendance' });
+        return res.status(500).json({ message: 'Error marking attendance' });
     }
 });
 
-router.get('/attendance/:userId', async (req, res) => {
+
+router.get('/attendance/:userId', checkAuth, async (req, res) => {
     const { userId } = req.params;
 
     try {
         const user = await User.findById(userId);
-        res.status(200).json({ attendance: user.attendance });
+        const attendance = user.attendance;
+
+        const startDate = new Date(user.createdAt);
+        const today = new Date();
+
+        // Loop through each day since the account was created
+        for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+            const existingAttendance = attendance.find(att => new Date(att.date).toDateString() === d.toDateString());
+            if (!existingAttendance) {
+                attendance.push({ date: new Date(d), status: 'absent' });
+            }
+        }
+
+        await user.save();
+        res.status(200).json({ attendance });
     } catch (err) {
         res.status(500).json({ error: 'Error fetching attendance' });
     }
 });
+
 
 
 
