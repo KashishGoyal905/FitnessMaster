@@ -84,3 +84,71 @@ body, html, #root {
     padding: 20px;
     background-color: #3c3c3c;
 }
+
+/* Calendar */
+/* Custom styles for the Calendar */
+.react-calendar.calendar-dark {
+    background-color: #2D3748;
+    /* Dark background */
+    color: #FFFFFF;
+    /* White text */
+    border-radius: 10px;
+    border: none;
+    /* Remove default border */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Shadow effect */
+}
+
+/* Ensure tiles and header styling */
+.react-calendar__tile {
+    background-color: #2D3748;
+    color: #A0AEC0;
+    /* Light text color */
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.react-calendar__tile:enabled:hover {
+    background-color: #4A5568;
+    color: white;
+}
+
+.react-calendar__tile--now {
+    background: #2B6CB0;
+    color: white;
+}
+
+.react-calendar__tile--active {
+    background: #3182CE;
+    color: white;
+}
+
+.react-calendar__navigation {
+    background-color: #1A202C;
+    color: #A0AEC0;
+}
+
+.react-calendar__navigation__label {
+    font-weight: bold;
+    color: #CBD5E0;
+}
+
+/* Custom tile dot (e.g., for attendance) */
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+/* Present and absent indicators */
+.present {
+    background-color: #38A169;
+    /* Green for present */
+}
+
+.absent {
+    background-color: #E53E3E;
+    /* Red for absent */
+}

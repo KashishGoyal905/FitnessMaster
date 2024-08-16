@@ -3,6 +3,10 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import authContext from '../../context/AuthContext';
 
+// Toast messages
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function UserWelcomeDashboard() {
   const { user } = useContext(authContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -22,6 +26,14 @@ export default function UserWelcomeDashboard() {
         const data = await response.json();
         if (response.ok) {
           setAttendance(data.attendance);
+
+          // Check if today’s attendance is already marked or not
+          const today = new Date().toDateString();
+          const attendanceToday = data.attendance.find(att => new Date(att.date).toDateString() === today);
+          if (!attendanceToday) {
+            // If no attendance marked today, add a red dot (absent) entry
+            setAttendance(prev => [...prev, { date: today, status: 'absent' }]);
+          }
         } else {
           console.error('Failed to fetch attendance:', data.message);
         }
@@ -49,13 +61,13 @@ export default function UserWelcomeDashboard() {
         const data = await response.json();
         if (response.ok) {
           setAttendance([...attendance, { date: date.toDateString(), status: 'present' }]);
-          alert(`Attendance marked for ${date.toDateString()}`);
+          toast.success(`Attendance marked for ${date.toDateString()}`);
         } else {
           throw new Error(data.message || 'Failed to mark attendance');
         }
       } catch (err) {
         console.error(err.message);
-        alert('Error marking attendance');
+        toast.error(err.message || 'Error marking attendance');
       }
     } else {
       alert('You can only mark attendance for today.');
@@ -72,10 +84,15 @@ export default function UserWelcomeDashboard() {
       if (attendanceForDate) {
         return (
           <div
-            className={`flex justify-center items-center rounded-full w-4 h-4 mx-auto mt-1 
-              ${attendanceForDate.status === 'present' ? 'bg-green-500' : 'bg-red-500'}
-            `}
+            className={`flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 
+                ${attendanceForDate.status === 'present' ? 'bg-green-400' : 'bg-red-400'}
+              `}
           ></div>
+        );
+      } else if (date < new Date()) {
+        // Mark missed days with a red dot
+        return (
+          <div className="flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 bg-red-400"></div>
         );
       }
     }
@@ -97,10 +114,9 @@ export default function UserWelcomeDashboard() {
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
-
-            className="bg-slate-950 rounded-lg text-black"
+            className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
             tileContent={tileContent}
-            onClickDay={(date) => markAttendance(date)}
+          // onClickDay={(date) => markAttendance(date)}
           />
         </div>
 
