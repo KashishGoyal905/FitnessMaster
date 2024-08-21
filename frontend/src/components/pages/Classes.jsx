@@ -6,74 +6,12 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Classes() {
-  // const classes = {
-  //   morning: [
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1lZGl0YXRpb258ZW58MHx8MHx8fDA%3D',
-  //       title: 'Morning Yoga',
-  //       description: 'Start your day with a refreshing yoga session.',
-  //       time: '6:00 AM - 7:00 AM',
-  //       instructor: 'Neelam',
-  //     },
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1lZGl0YXRpb258ZW58MHx8MHx8fDA%3D',
-  //       title: 'Morning Yoga',
-  //       description: 'Start your day with a refreshing yoga session.',
-  //       time: '6:00 AM - 7:00 AM',
-  //       instructor: 'Neelam',
-  //     },
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1lZGl0YXRpb258ZW58MHx8MHx8fDA%3D',
-  //       title: 'Morning Yoga',
-  //       description: 'Start your day with a refreshing yoga session.',
-  //       time: '6:00 AM - 7:00 AM',
-  //       instructor: 'Neelam',
-  //     },
-  //     // Add more morning classes here
-  //   ],
-  //   afternoon: [
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGlsYXRlc3xlbnwwfHwwfHx8MA%3D%3D',
-  //       title: 'Afternoon Pilates',
-  //       description: 'Strengthen your core with our pilates class.',
-  //       time: '12:00 PM - 1:00 PM',
-  //       instructor: 'Neelam',
-  //     },
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGlsYXRlc3xlbnwwfHwwfHx8MA%3D%3D',
-  //       title: 'Afternoon Pilates',
-  //       description: 'Strengthen your core with our pilates class.',
-  //       time: '12:00 PM - 1:00 PM',
-  //       instructor: 'Neelam',
-  //     },
-  //     // Add more afternoon classes here
-  //   ],
-  //   evening: [
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhcmRpb3xlbnwwfHwwfHx8MA%3D%3D',
-  //       title: 'Evening Cardio',
-  //       description: 'Boost your endurance with evening cardio.',
-  //       time: '6:00 PM - 7:00 PM',
-  //       instructor: 'Neelam',
-  //     },
-  //     {
-  //       image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhcmRpb3xlbnwwfHwwfHx8MA%3D%3D',
-  //       title: 'Evening Cardio',
-  //       description: 'Boost your endurance with evening cardio.',
-  //       time: '6:00 PM - 7:00 PM',
-  //       instructor: 'Neelam',
-  //     },
-  //     // Add more evening classes here
-  //   ],
-  // };
-
   // States to store classes based on phases
-
-
   const [morningClasses, setMorningClasses] = useState([]);
   const [afternoonClasses, setAfternoonClasses] = useState([]);
   const [eveningClasses, setEveningClasses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Optional loading state
+  // Loading State
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Function to fetch classes based on phase
@@ -86,7 +24,8 @@ export default function Classes() {
           setIsLoading(false);
           throw new Error(data.message || 'Failed to retrieve the classes');
         }
-
+        
+        setIsLoading(false);
         setState(data.classes); // Assuming the response has a 'classes' array
       } catch (error) {
         setIsLoading(false);
