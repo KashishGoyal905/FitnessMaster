@@ -7,7 +7,7 @@ import authContext from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function UserWelcomeDashboard() {
+export default function UserDetails() {
   const { user } = useContext(authContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [attendance, setAttendance] = useState([]);
@@ -92,49 +92,41 @@ export default function UserWelcomeDashboard() {
   };
 
   return (
-    <div className="container mx-auto p-8 bg-gray-900 text-white min-h-screen">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-purple-500">
-          Welcome, {user.username}
-        </h1>
-        <p className="md:text-xl mt-4 mb-2 text-gray-300 italic">
-          "Success is the sum of small efforts, repeated day in and day out."
-        </p>
-        <hr className="border-t-2 border-purple-600 mx-auto w-3/4" />
+    <div className="container mx-auto p-4 bg-gray-900 text-white min-h-screen">
+      <div className="text-center">
+        <h1 className="text-5xl">Hello, {user.username}</h1>
+        <p className="text-xl mt-2 mb-2 text-purple-500">Your attendance history at a glance</p>
+        <hr className="mb-8" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Calendar for Attendance */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-            Your Attendance
-          </h2>
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold mb-4 text-center">Your Attendance</h2>
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
-            className="bg-gray-700 text-white rounded-lg calendar-dark mx-auto shadow-md"
+            className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
             tileContent={tileContent}
           />
         </div>
 
         {/* Mark Attendance & Message */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6">
-            Mark Attendance
-          </h2>
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+          <h2 className="text-3xl font-bold mb-4">Mark Today's Attendance</h2>
           {new Date().toDateString() === selectedDate.toDateString() ? (
             attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
-              <p className="text-green-400 text-xl md:text-2xl">Attendance already marked for today!</p>
+              <p className="text-green-500 text-xl">You've already marked your attendance for today!</p>
             ) : (
               <button
                 onClick={() => markAttendance(selectedDate)}
-                className="bg-purple-600 hover:bg-purple-700 text-white text-lg md:text-xl px-8 py-4 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition duration-300 transform hover:scale-105"
               >
                 Mark Attendance for Today
               </button>
             )
           ) : (
-            <p className="text-red-500 text-2xl">You can only mark attendance for today.</p>
+            <p className="text-red-500 text-xl">You can only mark attendance for today.</p>
           )}
         </div>
       </div>

@@ -17,6 +17,7 @@ import UserClasses from './components/pages/UserClasses';
 import ManageUsers from './components/pages/ManageUsers';
 import CreateClass from './components/pages/CreateClass';
 import ManageClasses from './components/pages/ManageClasses';
+import UserDetails from './components/pages/UserDetails';
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       { path: 'manage-users', element: <ManageUsers /> },
       { path: 'create-class', element: <CreateClass /> },
       { path: 'manage-class', element: <ManageClasses /> },
+      { path: 'user/:userId', element: <UserDetails /> },
     ]
   },
   { path: '/user/login', element: <Login /> },

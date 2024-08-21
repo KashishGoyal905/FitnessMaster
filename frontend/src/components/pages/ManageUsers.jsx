@@ -21,7 +21,6 @@ export default function ManageUsers() {
     // Extracting token from the localSotorage
     const token = localStorage.getItem('token');
 
-
     useEffect(() => {
         // Fetch users from the API
         const fetchUsers = async () => {
@@ -159,7 +158,10 @@ export default function ManageUsers() {
                     </thead>
                     <tbody>
                         {users && users.map(user => (
-                            <tr key={user._id} className="hover:bg-gray-700 transition duration-300">
+                            <tr key={user._id}
+                                className="hover:bg-gray-700 transition duration-300 cursor-pointer"
+                                onClick={() => navigate(`/dashboard/user/${user._id}`)}
+                            >
                                 <td className="py-3 px-6 border-b border-gray-600 flex items-center">
                                     {user.isActive ?
                                         <div className='avatar online w-12 h-12'>

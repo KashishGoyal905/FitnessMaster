@@ -13,7 +13,7 @@ const cloudinary = require('cloudinary').v2;
 // Middleware to check the token
 const checkAuth = require('../middleware/check-auth');
 
-// Retrieve all the classes based on phase of the day
+// Retrieve all the classes based on phase of the day for all the users --Done
 router.get('/', async (req, res) => {
     const { phase } = req.query;
     try {
