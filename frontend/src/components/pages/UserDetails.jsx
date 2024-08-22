@@ -1,22 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import authContext from '../../context/AuthContext';
-
-// Toast messages
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function UserDetails() {
-  const { user } = useContext(authContext);
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [attendance, setAttendance] = useState([]);
 
-  // Fetch attendance history on component mount
   useEffect(() => {
-    const fetchAttendance = async () => {
+    const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/attendance/${user._id}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -25,51 +22,31 @@ export default function UserDetails() {
 
         const data = await response.json();
         if (response.ok) {
-          setAttendance(data.attendance);
+          setUser(data);
         } else {
-          console.error('Failed to fetch attendance:', data.message);
+          toast.error('Failed to fetch user details.');
         }
-      } catch (err) {
-        console.error('Error fetching attendance:', err.message);
+      } catch (error) {
+        toast.error('Error fetching user details.');
       }
     };
 
-    fetchAttendance();
-  }, [user._id]);
+    fetchUserDetails();
+  }, [userId]);
 
-  // Mark attendance for today
-  const markAttendance = async (date) => {
-    if (new Date().toDateString() === date.toDateString()) {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/mark-attendance/${user._id}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({ date: date.toDateString(), status: 'present' }),
-        });
 
-        const data = await response.json();
-        if (response.ok) {
-          setAttendance([...attendance, { date: date.toDateString(), status: 'present' }]);
-          toast.success(`Attendance marked for ${date.toDateString()}`);
-        } else {
-          throw new Error(data.message || 'Failed to mark attendance');
-        }
-      } catch (err) {
-        console.error(err.message);
-        toast.error(err.message || 'Error marking attendance');
-      }
-    } else {
-      alert('You can only mark attendance for today.');
+  const calculateBMI = (weight, height) => {
+    if (weight && height) {
+      const heightInMeters = height * 0.3048;
+      return (weight / (heightInMeters * heightInMeters)).toFixed(1);
     }
+    return 'N/A';
   };
 
-  // Determine tile content based on attendance
+
   const tileContent = ({ date, view }) => {
-    if (view === 'month') {
-      const attendanceForDate = attendance.find(
+    if (view === 'month' && user) {
+      const attendanceForDate = user.attendance.find(
         (att) => new Date(att.date).toDateString() === date.toDateString()
       );
 
@@ -77,59 +54,121 @@ export default function UserDetails() {
         return (
           <div
             className={`flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 
-                ${attendanceForDate.status === 'present' ? 'bg-green-400' : 'bg-red-400'}
-              `}
+              ${attendanceForDate.status === 'present' ? 'bg-green-400' : 'bg-red-400'}
+            `}
           ></div>
-        );
-      } else if (date < new Date()) {
-        // Mark missed days with a red dot
-        return (
-          <div className="flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 bg-red-400"></div>
         );
       }
     }
     return null;
   };
 
-  return (
-    <div className="container mx-auto p-4 bg-gray-900 text-white min-h-screen">
-      <div className="text-center">
-        <h1 className="text-5xl">Hello, {user.username}</h1>
-        <p className="text-xl mt-2 mb-2 text-purple-500">Your attendance history at a glance</p>
-        <hr className="mb-8" />
+  return user ? (
+    <div className="container mx-auto p-6 bg-gray-900 text-white min-h-screen">
+      {/* Profile Section */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-6">
+          <img
+            src={user.image || '/default-profile.png'}
+            alt="Profile"
+            className="w-32 h-32 rounded-full shadow-lg"
+          />
+          <div>
+            <h1 className="text-4xl font-bold">{user.username}</h1>
+            <p className="text-xl text-gray-400">{user.email}</p>
+          </div>
+        </div>
+
+        {/* Badges for Active/Inactive and Role */}
+        <div className="flex flex-row items-end space-x-6">
+          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${user.isActive ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
+            {user.isActive ? 'Active' : 'Inactive'}
+          </span>
+          <span className="px-3 py-1 rounded-full text-sm font-semibold bg-purple-600 text-white">
+            {user.userRole}
+          </span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Calendar for Attendance */}
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-bold mb-4 text-center">Your Attendance</h2>
-          <Calendar
-            onChange={setSelectedDate}
-            value={selectedDate}
-            className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
-            tileContent={tileContent}
-          />
-        </div>
+      {/* Last Login with subtle styling */}
+      <div className="flex items-center mt-4 text-gray-400">
+        <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M13 7h5l-6 6-6-6h5V3h2v4z" />
+        </svg>
+        <p>Last Login: {new Date(user.lastLogin).toLocaleString()}</p>
+      </div>
 
-        {/* Mark Attendance & Message */}
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-3xl font-bold mb-4">Mark Today's Attendance</h2>
-          {new Date().toDateString() === selectedDate.toDateString() ? (
-            attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
-              <p className="text-green-500 text-xl">You've already marked your attendance for today!</p>
-            ) : (
-              <button
-                onClick={() => markAttendance(selectedDate)}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition duration-300 transform hover:scale-105"
-              >
-                Mark Attendance for Today
-              </button>
-            )
-          ) : (
-            <p className="text-red-500 text-xl">You can only mark attendance for today.</p>
-          )}
+      {/* Personal Information */}
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+        <h2 className="text-3xl font-bold mb-4">Personal Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p><strong>Contact Number:</strong> {user.contactNumber || 'N/A'}</p>
+            <p><strong>Gender:</strong> {user.gender || 'N/A'}</p>
+            <p><strong>Age:</strong> {user.age || 'N/A'}</p>
+          </div>
+          <div>
+            <p><strong>Address:</strong> {user.address || 'N/A'}</p>
+            <p><strong>City:</strong> {user.city || 'N/A'}</p>
+            <p><strong>State:</strong> {user.state || 'N/A'}</p>
+            <p><strong>Postal Code:</strong> {user.postalcode || 'N/A'}</p>
+          </div>
         </div>
+      </div>
+
+      {/* Fitness Information */}
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+        <h2 className="text-3xl font-bold mb-4">Fitness Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p><strong>Weight:</strong> {user.weight || 'N/A'} kg</p>
+            <p><strong>Height:</strong> {user.height || 'N/A'} feet</p>
+            <p><strong>BMI:</strong> {calculateBMI(user.weight, user.height)}</p>
+          </div>
+          <div>
+            <p><strong>Fitness Goals:</strong> {user.goals || 'N/A'}</p>
+            <p><strong>Enrolled Classes:</strong></p>
+            <ul className="list-disc ml-5">
+              {user.enrolledClasses.length > 0 ? (
+                user.enrolledClasses.map((cls) => (
+                  <li key={cls._id} className='text-white'>{cls.title}</li>
+                ))
+              ) : (
+                <p>No classes enrolled.</p>
+              )}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Attendance Calendar */}
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold mb-4 text-center">Attendance</h2>
+        <Calendar
+          onChange={setSelectedDate}
+          value={selectedDate}
+          className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
+          tileContent={tileContent}
+        />
+      </div>
+
+      {/* Admin Actions */}
+      <div className="mt-8 text-center">
+        <button
+          className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg mr-4"
+          onClick={() => {/* Deactivate user */ }}
+        >
+          Deactivate User
+        </button>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+          onClick={() => {/* Reset Password */ }}
+        >
+          Reset Password
+        </button>
       </div>
     </div>
+  ) : (
+    <p>Loading user details...</p>
   );
 }
