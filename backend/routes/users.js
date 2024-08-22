@@ -345,6 +345,7 @@ router.get('/attendance/:userId', checkAuth, async (req, res) => {
 
 
 //! Admin
+
 // Get all the users
 router.get('/users', checkAuth, async (req, res) => {
     const loggedUserRole = req.user.userRole;
@@ -355,10 +356,24 @@ router.get('/users', checkAuth, async (req, res) => {
         } else {
             res.status(500).json({ message: 'You are not authorized to perform this task!' });
         }
-
     } catch (error) {
         console.log('Backend', error);
         res.status(500).json({ message: 'Failed to retrieve the users', error });
+    }
+});
+
+// Get specific user Details
+router.get('/:userId', checkAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId)
+            .populate('attendance')
+            .populate('enrolledClasses', 'title'); // Populate enrolledClasses with the title field
+
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        return res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
