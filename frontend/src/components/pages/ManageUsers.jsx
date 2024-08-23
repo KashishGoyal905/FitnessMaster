@@ -180,13 +180,13 @@ export default function ManageUsers() {
                                 <td className="py-3 px-6 border-b border-gray-600 flex space-x-2">
                                     <button
                                         onClick={() => handleChangeRole(user._id)}
-                                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200"
+                                        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200"
                                     >
                                         Change Role
                                     </button>
                                     <button
                                         onClick={() => handleDeleteUser(user._id)}
-                                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center"
+                                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center"
                                     >
                                         <FaTrashAlt />
                                     </button>
