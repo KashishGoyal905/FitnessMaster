@@ -56,6 +56,11 @@ export default function UserDetails() {
             `}
           ></div>
         );
+      } else if (date < new Date()) {
+        // Mark missed days with a red dot
+        return (
+          <div className="flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 bg-red-400"></div>
+        );
       }
     }
     return null;
@@ -153,12 +158,14 @@ export default function UserDetails() {
       {/* Admin Actions */}
       <div className="mt-6 sm:mt-8 text-center">
         <button
+          disabled
           className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg mr-4"
           onClick={() => {/* Deactivate user */ }}
         >
           Delete User
         </button>
         <button
+          disabled
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg"
           onClick={() => {/* Reset Password */ }}
         >

@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import useRoleRedirect from '../../middleware/useRoleRedirect';
 
 export default function UserProfile() {
-  // To restrict the user with 'admin' role to acess this page
   useRoleRedirect(['user'], '/');
 
   const { user, updateFun } = useContext(authContext);
@@ -32,28 +31,21 @@ export default function UserProfile() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     const fd = new FormData(e.target);
-    const data = Object.fromEntries(fd.entries());
-    console.log('User Update Details: ', data);
-
-    // Token for authorization || only logged in users with the right credentials should be able to update the profile
     const token = localStorage.getItem('token');
-    
+
     try {
       setIsLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/update/${user._id}`, {
         method: 'POST',
         body: fd,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       const resData = await response.json();
       if (!response.ok) {
         setIsLoading(false);
-        throw new Error(resData.message || 'Failed to Sign Up');
+        throw new Error(resData.message || 'Failed to Update');
       }
 
       setIsLoading(false);
@@ -62,90 +54,90 @@ export default function UserProfile() {
       toast.success(resData.message || 'User Updated Successfully');
     } catch (err) {
       setIsLoading(false);
-      console.log('Failed to update user details: ', err.message);
       toast.error(err.message || 'Failed to update user details');
-      return;
     }
   }
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       {isLoading && (
         <div className="loading-overlay">
           <p className="relative">
-            <span className="loading loading-dots loading-lg text-primary"></span>
+            <span className="loading loading-dots loading-lg text-purple-600"></span>
           </p>
         </div>
       )}
-      <div className="flex flex-col items-center md:mt-2">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full md:w-2/3 lg:w-[65vw]">
+      <div className="flex flex-col items-center md:mt-4">
+        <div className="bg-gray-900 rounded-lg shadow-lg overflow-hidden w-full md:w-2/3 lg:w-[65vw]">
           <div className="bg-cover bg-center h-40 md:h-48" style={{ backgroundImage: `url(${myUser.image || 'default.jpg'})` }}></div>
-          <div className="p-6 bg-gray-800 text-gray-200">
+          <div className="p-6 bg-gray-900 text-white">
             <div className="flex flex-col items-center -mt-20">
               <img
-                className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-white"
+                className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-purple-600"
                 src={myUser.image || 'default-avatar.png'}
                 alt="Profile"
               />
-              <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-primary">{profileData.username}</h2>
-              <p className="text-gray-200 text-sm">{myUser.email}</p>
-              <p className="text-gray-200 text-sm">{profileData.contactNumber || 'NA'}</p>
+              <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-purple-600">{profileData.username}</h2>
+              <p className="text-gray-300 text-sm">{myUser.email}</p>
+              <p className="text-gray-300 text-sm">{profileData.contactNumber || 'NA'}</p>
             </div>
-            <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-              <div className="text-gray-200 text-sm"><strong>City:</strong> {profileData.city || 'NA'}</div>
-              <div className="text-gray-200 text-sm"><strong>Address:</strong> {profileData.address || 'NA'}</div>
-              <div className="text-gray-200 text-sm"><strong>Weight:</strong> {profileData.weight || 'NA'}</div>
-              <div className="text-gray-200 text-sm"><strong>Height:</strong> {profileData.height || 'NA'}</div>
-              <div className="text-gray-200 text-sm"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
-              <div className="text-gray-200 text-sm"><strong>Age:</strong> {profileData.age || 'NA'}</div>
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+              <div className="text-gray-300 text-sm"><strong>City:</strong> {profileData.city || 'NA'}</div>
+              <div className="text-gray-300 text-sm"><strong>Address:</strong> {profileData.address || 'NA'}</div>
+              <div className="text-gray-300 text-sm"><strong>Weight:</strong> {profileData.weight || 'NA'} kg</div>
+              <div className="text-gray-300 text-sm"><strong>Height:</strong> {profileData.height || 'NA'} ft</div>
+              <div className="text-gray-300 text-sm"><strong>Gender:</strong> {profileData.gender || 'NA'}</div>
+              <div className="text-gray-300 text-sm"><strong>Age:</strong> {profileData.age || 'NA'}</div>
             </div>
-            <div className="mt-4 md:mt-6 bg-gray-700 text-gray-200 p-4 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold text-center text-primary mb-2">Goals</h3>
+            <div className="mt-6 bg-gray-800 text-white p-4 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold text-center text-purple-600 mb-2">Goals</h3>
               <p className="text-center">{profileData.goals || 'No goals set yet'}</p>
             </div>
           </div>
         </div>
-        <div className="w-full md:w-2/3 lg:w-[65vw] mt-8 p-4 bg-gray-800 text-gray-200 shadow-md rounded-lg">
+
+        <div className="w-full md:w-2/3 lg:w-[65vw] mt-8 p-6 bg-gray-900 text-white shadow-md rounded-lg">
           <form method="post" className="space-y-6" encType="multipart/form-data" onSubmit={handleSubmit}>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-primary">Update Information</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-purple-600">Update Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Full Name</label>
+              {/* Input Fields */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Full Name</label>
                 <input
                   type="text"
                   name="username"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.username}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Mobile Number</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Mobile Number</label>
                 <input
                   type="number"
                   name="contactNumber"
                   pattern="\d{10}"
                   title="It must contain exactly 10 digits"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.contactNumber}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Email Address</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Email Address</label>
                 <input
                   type="email"
                   name="email"
                   disabled
                   value={user.email}
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Gender</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Gender</label>
                 <select
                   name="gender"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.gender}
                   onChange={handleInputChange}
                 >
@@ -155,106 +147,91 @@ export default function UserProfile() {
                   <option value="other">Other</option>
                 </select>
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Weight</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Weight</label>
                 <div className="flex">
                   <input
                     type="number"
                     name="weight"
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                     value={profileData.weight}
                     onChange={handleInputChange}
                   />
-                  <span className="ml-2 mt-2 text-gray-200">kg</span>
+                  <span className="ml-2 mt-2 text-gray-400">kg</span>
                 </div>
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Height</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Height</label>
                 <div className="flex">
                   <input
                     type="number"
                     name="height"
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                     value={profileData.height}
                     onChange={handleInputChange}
                   />
-                  <span className="ml-2 mt-2 text-gray-200">ft</span>
+                  <span className="ml-2 mt-2 text-gray-400">ft</span>
                 </div>
               </div>
               <div className="col-span-2">
-                <label className="block text-sm font-medium">Street Address</label>
+                <label className="block text-sm font-medium text-gray-300">Street Address</label>
                 <input
                   type="text"
                   name="address"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.address}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">City</label>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-300">City</label>
                 <input
                   type="text"
                   name="city"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.city}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">State / Province</label>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-300">State</label>
                 <input
                   type="text"
                   name="state"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.state}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Postal Code</label>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-300">Postal Code</label>
                 <input
                   type="number"
                   name="postalcode"
-                  pattern="\d{6}"
-                  title="It must contain exactly 6 digits"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={profileData.postalcode}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium">Profile Picture</label>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-300">Update Image</label>
                 <input
                   type="file"
                   name="image"
-                  accept="image/*"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-0 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
-                />
-              </div>
-              <div className="col-span-2">
-                <label className="block text-sm font-medium">Goals</label>
-                <textarea
-                  name="goals"
-                  rows="3"
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-500"
-                  value={profileData.goals}
-                  onChange={handleInputChange}
+                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                 />
               </div>
             </div>
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="py-2 px-4 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-75"
-              >
-                Update Profile
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50"
+            >
+              {isLoading ? 'Updating...' : 'Update Profile'}
+            </button>
           </form>
         </div>
       </div>
     </div>
-
   );
 }
+  
