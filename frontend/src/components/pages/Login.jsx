@@ -137,6 +137,11 @@ export default function Login() {
                     Remember me
                   </label>
                 </div>
+                <div className="">
+                  <Link to="/updatePass" className="m-auto font-medium text-primary hover:text-indigo-400">
+                    Forgot your password?
+                  </Link>
+                </div>
               </div>
 
               <div className="pt-2">

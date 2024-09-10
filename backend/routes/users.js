@@ -16,6 +16,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
 
+// password reset
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
 
 
 // Get User Details for the context --Done
@@ -340,6 +344,73 @@ router.get('/attendance/:userId', checkAuth, async (req, res) => {
         res.status(200).json({ attendance });
     } catch (err) {
         res.status(500).json({ error: 'Error fetching attendance' });
+    }
+});
+
+//* NodeMailer || Forgot Password
+router.post('/forgot-password', async (req, res) => {
+    // Extracting email from the body
+    const { email } = req.body;
+    // Debugging
+    console.log('Body of Update Password: ', req.body);
+
+    try {
+        const user = await User.findOne({ email: email });
+
+        // checking if user exists or not
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        // Generate a random token for reset
+        const token = crypto.randomBytes(32).toString('hex');
+
+        // Set token and expiration on the user
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        // Send email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail', // email service
+            auth: {
+                user: 'resetpass905@gmail.com', // email service id
+                pass: process.env.NODEMAILER_EMAIL_PASSWORD, // email service Password(App Password)
+            },
+            host: 'smtp.gmail.com',
+            secure: false
+        });
+
+        const mailOptions = {
+            to: user.email,
+            from: 'resetpass905@gmail.com',
+            subject: 'Password Reset',
+            text: ` Hello ${user.name},
+
+            We received a request to reset the password for your account.
+            
+            To reset your password, please click the link below or copy and paste it into your browser:
+            https://askservice2-0-1-sqgv.onrender.com/reset-password/${token}
+            
+            If you did not request a password reset, please ignore this email or contact support if you have any questions.
+            
+            Thank you,
+            The Fitness Master Team
+            
+            For support, contact us at supportService@gmail.com`
+        };
+
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error('Error sending email: ', err);
+                return res.status(500).send({ message: 'Error sending email' });
+            }
+            return res.status(200).send({ message: 'Password reset email sent' });
+        });
+
+    } catch (err) {
+        console.error('Error processing request: ', err);
+        return res.status(500).send({ message: 'Error processing request' });
     }
 });
 
