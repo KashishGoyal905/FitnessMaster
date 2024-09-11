@@ -385,12 +385,12 @@ router.post('/forgot-password', async (req, res) => {
             to: user.email,
             from: 'resetpass905@gmail.com',
             subject: 'Password Reset',
-            text: ` Hello ${user.name},
+            text: ` Hello ${user.username},
 
             We received a request to reset the password for your account.
             
             To reset your password, please click the link below or copy and paste it into your browser:
-            https://askservice2-0-1-sqgv.onrender.com/reset-password/${token}
+            ${process.env.REACT_APP_FRONTEND_URL}/reset-password/${token}
             
             If you did not request a password reset, please ignore this email or contact support if you have any questions.
             
@@ -411,6 +411,37 @@ router.post('/forgot-password', async (req, res) => {
     } catch (err) {
         console.error('Error processing request: ', err);
         return res.status(500).send({ message: 'Error processing request' });
+    }
+});
+
+//* UPDATE || Forgot the password
+router.post('/reset-password/:token', async (req, res) => {
+    // Extracting token and password from URL and the body
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+        // Finding the user with the help of token if the time has not expired
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
+
+        // if time expired or user not found
+        if (!user) {
+            return res.status(400).send({ message: 'Password reset token is invalid or has expired' });
+        }
+
+        // Update the user's password
+        user.password = await bcrypt.hash(password, 10);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        return res.status(200).send({ message: 'Password has been reset' });
+    } catch (err) {
+        console.error('Error resetting password: ', err);
+        return res.status(400).send({ message: 'Error resetting password' });
     }
 });
 

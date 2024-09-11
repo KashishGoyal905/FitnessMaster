@@ -19,6 +19,7 @@ import CreateClass from './components/pages/CreateClass';
 import ManageClasses from './components/pages/ManageClasses';
 import UserDetails from './components/pages/UserDetails';
 import ForgotPassword from './components/pages/ForgotPassword';
+import ResetPaswword from './components/pages/ResetPaswword';
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
   { path: '/user/login', element: <Login /> },
   { path: '/user/signup', element: <SignUp /> },
   { path: '/updatePass', element: <ForgotPassword /> },
+  { path: '/reset-password/:token', element: <ResetPaswword /> },
 ]);
 
 
