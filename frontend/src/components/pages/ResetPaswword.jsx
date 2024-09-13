@@ -8,7 +8,6 @@ export default function ResetPassword() {
     const { token } = useParams();
     const [isLoading, setIsLoading] = useState(false);
 
-
     async function handlePassUpdate(event) {
         event.preventDefault();
         const fd = new FormData(event.target);
@@ -23,7 +22,7 @@ export default function ResetPassword() {
 
         try {
             setIsLoading(true);
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/reset-password/${token}`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/reset-password/${token}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,8 +37,7 @@ export default function ResetPassword() {
 
             toast.success('Password reset successfully');
             setIsLoading(false);
-            event.target.reset();
-            navigate('/login');
+            navigate('/user/login');
         } catch (err) {
             toast.error(err.message || 'Failed to reset password');
             setIsLoading(false);
@@ -49,7 +47,7 @@ export default function ResetPassword() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 flex justify-center items-center">
+        <div className="min-h-screen bg-gray-900 flex justify-center items-center px-4 sm:px-6 lg:px-8">
             {isLoading &&
                 <div className="loading-overlay">
                     <p className="relative">

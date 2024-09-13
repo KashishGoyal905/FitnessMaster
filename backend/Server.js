@@ -8,8 +8,8 @@ const db = require('./config/mongoose');
 const path = require("path");
 
 
-
 app.use(express.urlencoded({ extended: true })); // helps to parse the data
+
 // CORS
 app.use(express.json()); // parse the data coming from the frontend fecth
 app.use((req, res, next) => {
