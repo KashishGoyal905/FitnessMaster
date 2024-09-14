@@ -330,20 +330,26 @@ router.get('/attendance/:userId', checkAuth, async (req, res) => {
         }
         const attendance = user.attendance;
 
-        // const startDate = new Date(user.createdAt);
-        // const today = new Date();
-        // today.setHours(0, 0, 0, 0); // Reset time to 00:00 to match the comparison in the loop.
-        // for (let d = new Date(startDate); d < today; d.setDate(d.getDate() + 1)) {
-        //     const existingAttendance = attendance.find(att => new Date(att.date).toDateString() === d.toDateString());
-        //     if (!existingAttendance) {
-        //         attendance.push({ date: new Date(d), status: 'absent' });
-        //     }
-        // }
-        // await user.save();
-
         res.status(200).json({ attendance });
     } catch (err) {
         res.status(500).json({ error: 'Error fetching attendance' });
+    }
+});
+
+// Attendace for chart
+// Get attendance data for a user
+router.get('/:id/attendance', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId).select('attendance');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user.attendance);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
     }
 });
 
