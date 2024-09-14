@@ -137,7 +137,10 @@ export default function UserWelcomeDashboard() {
             <p className="text-red-500 text-2xl">You can only mark attendance for today.</p>
           )}
         </div>
+        {/* <AttendanceChart/> */}
+        {/* <AttendanceC */}
       </div>
     </div>
+
   );
 }
