@@ -5,7 +5,6 @@ import authContext from '../../context/AuthContext';
 import AttendanceChart from '../Charts/AttendanceChart.jsx';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaCalendarAlt, FaCheckCircle } from 'react-icons/fa';
 
 export default function UserWelcomeDashboard() {
   const { user } = useContext(authContext);
@@ -79,7 +78,9 @@ export default function UserWelcomeDashboard() {
           ></div>
         );
       } else if (date < new Date()) {
-        return <div className="flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 bg-red-400"></div>;
+        return (
+          <div className="flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 bg-red-400"></div>
+        );
       }
     }
     return null;
@@ -88,7 +89,7 @@ export default function UserWelcomeDashboard() {
   return (
     <div className="container mx-auto p-8 bg-gray-900 text-white min-h-screen">
       <div className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-purple-500">
+        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-purple-500">
           Welcome, {user.username}
         </h1>
         <p className="md:text-xl mt-4 mb-2 text-gray-300 italic">
@@ -100,8 +101,8 @@ export default function UserWelcomeDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Calendar for Attendance */}
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center">
-            <FaCalendarAlt className="mr-2" /> Your Attendance
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Your Attendance
           </h2>
           <Calendar
             onChange={setSelectedDate}
@@ -109,34 +110,34 @@ export default function UserWelcomeDashboard() {
             className="bg-gray-700 text-white rounded-lg calendar-dark mx-auto shadow-md"
             tileContent={tileContent}
           />
-        </div>
 
-        {/* Mark Attendance & Message */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1 text-center">
-          <h2 className="text-3xl font-bold mb-6 flex items-center justify-center">
-            <FaCheckCircle className="mr-2" /> Mark Attendance
-          </h2>
-          {new Date().toDateString() === selectedDate.toDateString() ? (
-            attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
-              <p className="text-green-400 text-xl md:text-2xl">Attendance already marked for today!</p>
+          {/* Mark Attendance Button Below the Calendar */}
+          <div className="mt-6 text-center">
+            {new Date().toDateString() === selectedDate.toDateString() ? (
+              attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
+                <p className="text-green-400 text-xl md:text-2xl">Attendance already marked for today!</p>
+              ) : (
+                <button
+                  onClick={() => markAttendance(selectedDate)}
+                  className="bg-purple-600 hover:bg-purple-700 text-white text-base md:text-xl px-6 py-2 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg mt-4"
+                >
+                  Mark Attendance for Today
+                </button>
+              )
             ) : (
-              <button
-                onClick={() => markAttendance(selectedDate)}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-200 ease-in-out"
-              >
-                Mark Attendance for Today
-              </button>
-            )
-          ) : (
-            <p className="text-red-400 text-xl md:text-2xl">You can only mark attendance for today.</p>
-          )}
+              <p className="text-red-500 text-2xl">You can only mark attendance for today.</p>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Attendance Chart */}
-      <div className="mt-10 bg-gray-800 p-8 rounded-lg shadow-xl">
-        <AttendanceChart userId={user._id} />
+        {/* Attendance Chart on the Right */}
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Attendance Chart
+          </h2>
+          <AttendanceChart userId={user._id} />
+        </div>
       </div>
     </div>
   );
-} 
+}

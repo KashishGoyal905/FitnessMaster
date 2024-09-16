@@ -152,3 +152,49 @@ body, html, #root {
     background-color: #E53E3E;
     /* Red for absent */
 }
+
+/* Chart */
+.chart-container {
+    max-width: 500px; /* Increased max width for larger screens */
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #1F2937; /* Dark gray */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); /* Shadow for a modern look */
+  }
+  
+  .chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;  /* Larger height for bigger screens */
+    width: 300px;   /* Larger width for bigger screens */
+  }
+  
+  @media (max-width: 1024px) {
+    .chart-wrapper {
+      height: 250px;
+      width: 250px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .chart-container {
+      width: 100%;
+      max-width: 300px; /* Smaller max width for medium screens */
+      padding: 16px;
+    }
+  
+    .chart-wrapper {
+      height: 220px;
+      width: 220px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .chart-wrapper {
+      height: 180px;
+      width: 180px;
+    }
+  }
+  
