@@ -115,11 +115,11 @@ export default function UserWelcomeDashboard() {
           <div className="mt-6 text-center">
             {new Date().toDateString() === selectedDate.toDateString() ? (
               attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
-                <p className="text-green-400 text-xl md:text-2xl">Attendance already marked for today!</p>
+                <p className="text-green-400 text-sm md:text-xl">Attendance already marked for today!</p>
               ) : (
                 <button
                   onClick={() => markAttendance(selectedDate)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white text-base md:text-xl px-6 py-2 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg mt-4"
+                  className="bg-purple-600 hover:bg-purple-700 text-white text-sm md:text-xl px-6 py-2 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg mt-4"
                 >
                   Mark Attendance for Today
                 </button>
@@ -132,7 +132,7 @@ export default function UserWelcomeDashboard() {
 
         {/* Attendance Chart on the Right */}
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">
             Attendance Chart
           </h2>
           <AttendanceChart userId={user._id} />

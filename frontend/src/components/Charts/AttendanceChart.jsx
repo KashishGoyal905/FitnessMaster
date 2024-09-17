@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
 
 export default function AttendanceChart({ userId }) {
   const [chartData, setChartData] = useState({});
@@ -53,7 +52,7 @@ export default function AttendanceChart({ userId }) {
   return (
     <div className="chart-container bg-gray-800 p-6 rounded-lg shadow-lg text-white">
       <h2 className="text-center text-lg mb-4 text-purple-500">Attendance Summary</h2>
-      <div className="chart-wrapper mx-auto">
+      <div className="chart-wrapper mx-auto mt-8">
         <Pie
           data={chartData}
           options={{
