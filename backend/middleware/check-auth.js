@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
         // authorization: 'Bearer Token';
         // to check if token exists or not
         const token = req.headers.authorization.split(' ')[1];
-        console.log('Token received on the check auth file:');
+        // console.log('Token received on the check auth file:');
         if (!token) {
             console.log('Authentication failed from the auth file');
             return res.status(401).json({ message: 'Authentication required' });

@@ -2,8 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import authContext from '../../context/AuthContext';
-
-// Toast messages
+import AttendanceChart from '../Charts/AttendanceChart.jsx';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,7 +11,6 @@ export default function UserWelcomeDashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [attendance, setAttendance] = useState([]);
 
-  // Fetch attendance history on component mount
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
@@ -37,7 +35,6 @@ export default function UserWelcomeDashboard() {
     fetchAttendance();
   }, [user._id]);
 
-  // Mark attendance for today
   const markAttendance = async (date) => {
     if (new Date().toDateString() === date.toDateString()) {
       try {
@@ -66,7 +63,6 @@ export default function UserWelcomeDashboard() {
     }
   };
 
-  // Determine tile content based on attendance
   const tileContent = ({ date, view }) => {
     if (view === 'month') {
       const attendanceForDate = attendance.find(
@@ -82,7 +78,6 @@ export default function UserWelcomeDashboard() {
           ></div>
         );
       } else if (date < new Date()) {
-        // Mark missed days with a red dot
         return (
           <div className="flex justify-center items-center rounded-full w-2 h-2 mx-auto mt-1 bg-red-400"></div>
         );
@@ -115,32 +110,34 @@ export default function UserWelcomeDashboard() {
             className="bg-gray-700 text-white rounded-lg calendar-dark mx-auto shadow-md"
             tileContent={tileContent}
           />
+
+          {/* Mark Attendance Button Below the Calendar */}
+          <div className="mt-6 text-center">
+            {new Date().toDateString() === selectedDate.toDateString() ? (
+              attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
+                <p className="text-green-400 text-sm md:text-xl">Attendance already marked for today!</p>
+              ) : (
+                <button
+                  onClick={() => markAttendance(selectedDate)}
+                  className="bg-purple-600 hover:bg-purple-700 text-white text-sm md:text-xl px-6 py-2 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg mt-4"
+                >
+                  Mark Attendance for Today
+                </button>
+              )
+            ) : (
+              <p className="text-red-500 text-2xl">You can only mark attendance for today.</p>
+            )}
+          </div>
         </div>
 
-        {/* Mark Attendance & Message */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6">
-            Mark Attendance
+        {/* Attendance Chart on the Right */}
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+          <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">
+            Attendance Chart
           </h2>
-          {new Date().toDateString() === selectedDate.toDateString() ? (
-            attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
-              <p className="text-green-400 text-xl md:text-2xl">Attendance already marked for today!</p>
-            ) : (
-              <button
-                onClick={() => markAttendance(selectedDate)}
-                className="bg-purple-600 hover:bg-purple-700 text-white text-lg md:text-xl px-8 py-4 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg"
-              >
-                Mark Attendance for Today
-              </button>
-            )
-          ) : (
-            <p className="text-red-500 text-2xl">You can only mark attendance for today.</p>
-          )}
+          <AttendanceChart userId={user._id} />
         </div>
-        {/* <AttendanceChart/> */}
-        {/* <AttendanceC */}
       </div>
     </div>
-
   );
 }

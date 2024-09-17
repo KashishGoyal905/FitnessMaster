@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import { Pie } from 'react-chartjs-2';
 
-// Chart component
 export default function AttendanceChart({ userId }) {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -15,20 +13,17 @@ export default function AttendanceChart({ userId }) {
         const data = await response.json();
 
         if (response.ok) {
-          // Format attendance data for the chart
-          const dates = data.map(item => item.date.split('T')[0]); // Extract just the date part
-          const statuses = data.map(item => (item.status === 'present' ? 1 : 0)); // Present = 1, Absent = 0
+          const presentCount = data.filter(item => item.status === 'present').length;
+          const absentCount = data.filter(item => item.status === 'absent').length;
 
           setChartData({
-            labels: dates, // Dates as x-axis labels
+            labels: ['Present', 'Absent'],
             datasets: [
               {
-                label: 'Attendance Status',
-                data: statuses, // 1 for present, 0 for absent
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-                tension: 0.4, // Smoother curve
+                data: [presentCount, absentCount],
+                backgroundColor: ['#4ADE80', '#F87171'], // Updated green and red
+                hoverBackgroundColor: ['#22C55E', '#EF4444'], 
+                borderWidth: 0,
               }
             ]
           });
@@ -47,40 +42,38 @@ export default function AttendanceChart({ userId }) {
   }, [userId]);
 
   if (loading) {
-    return <p>Loading chart...</p>;
+    return <p className="text-white">Loading chart...</p>;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="text-red-500">{error}</p>;
   }
 
   return (
-    <div className="attendance-chart">
-      <Line
-        data={chartData}
-        options={{
-          scales: {
-            y: {
-              ticks: {
-                callback: function (value) {
-                  return value === 1 ? 'Present' : 'Absent';
-                }
-              },
-              beginAtZero: true,
-              suggestedMax: 1,
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  return context.raw === 1 ? 'Present' : 'Absent';
+    <div className="chart-container bg-gray-800 p-6 rounded-lg shadow-lg text-white">
+      <h2 className="text-center text-lg mb-4 text-purple-500">Attendance Summary</h2>
+      <div className="chart-wrapper mx-auto mt-8">
+        <Pie
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                  color: '#D1D5DB', // Light gray for legend text
+                  padding: 20,
+                  boxWidth: 12,
+                  boxHeight: 12,
+                  usePointStyle: true,
                 }
               }
             }
-          }
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 }

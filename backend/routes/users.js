@@ -340,8 +340,12 @@ router.get('/attendance/:userId', checkAuth, async (req, res) => {
 // Get attendance data for a user
 router.get('/:id/attendance', async (req, res) => {
     try {
+        // console.log('Hit');
         const userId = req.params.id;
         const user = await User.findById(userId).select('attendance');
+
+        // console.log('User ID:', userId);
+        // console.log('User Attendance:', user.attendance);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
