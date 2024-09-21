@@ -36,7 +36,6 @@ const userSchema = new Schema({
         chestSize: { type: Number },
         thighSize: { type: Number },
         weight: { type: Number }, // Store daily weight
-        height: { type: Number }, // Height can be stored or left static
     }],
 }, { timestamps: true });
 
