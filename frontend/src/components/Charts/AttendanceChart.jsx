@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+
+// Register the required components for Chart.js
+Chart.register(ArcElement, Tooltip, Legend);
 
 export default function AttendanceChart({ userId }) {
   const [chartData, setChartData] = useState({});
@@ -11,11 +15,9 @@ export default function AttendanceChart({ userId }) {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}/attendance`);
         const data = await response.json();
-
         if (response.ok) {
           const presentCount = data.filter(item => item.status === 'present').length;
           const absentCount = data.filter(item => item.status === 'absent').length;
-
           setChartData({
             labels: ['Present', 'Absent'],
             datasets: [

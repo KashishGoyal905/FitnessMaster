@@ -455,6 +455,26 @@ router.post('/reset-password/:token', async (req, res) => {
     }
 });
 
+// User daily metrics:
+router.post('/metrics/:id',checkAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { weight, waistSize, chestSize, thighSize } = req.body;
+
+        // Add the new metrics entry to the user's fitnessMetrics array
+        user.fitnessMetrics.push({ weight, waistSize, chestSize, thighSize });
+
+        await user.save();
+        res.status(200).json({ message: 'Metrics logged successfully', user });
+    } catch (err) {
+        res.status(500).json({ message: 'Error logging metrics', error: err });
+    }
+});
+
 
 //! Admin
 

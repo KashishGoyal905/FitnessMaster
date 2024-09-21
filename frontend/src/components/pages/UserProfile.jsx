@@ -29,6 +29,46 @@ export default function UserProfile() {
     setProfileData({ ...profileData, [name]: value });
   };
 
+  const [dailyMetrics, setDailyMetrics] = useState({
+    weight: '',
+    waistSize: '',
+    chestSize: '',
+    thighSize: '',
+  });
+
+  // Update Daily Metrics Inputs
+  const handleMetricsChange = (e) => {
+    const { name, value } = e.target;
+    setDailyMetrics({ ...dailyMetrics, [name]: value });
+  };
+
+  // Submit Daily Metrics
+  async function handleMetricsSubmit(e) {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/metrics/${user._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(dailyMetrics),
+      });
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.message || 'Failed to log daily metrics');
+      }
+
+      toast.success(resData.message || 'Daily metrics logged successfully');
+      setDailyMetrics({ weight: '', waistSize: '', chestSize: '', thighSize: '' });
+    } catch (err) {
+      toast.error(err.message || 'Failed to log daily metrics');
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
@@ -94,6 +134,63 @@ export default function UserProfile() {
               <p className="text-center text-gray-300">{profileData.goals || 'No goals set yet'}</p>
             </div>
           </div>
+        </div>
+
+        {/* Daily Metrics Section */}
+        <div className="mt-8 bg-gray-800 p-4 sm:p-6 text-white shadow-md rounded-lg">
+          <h2 className="text-2xl font-bold mb-4 text-center text-purple-600">Log Daily Metrics</h2>
+          <form method="post" onSubmit={handleMetricsSubmit}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Weight (kg)</label>
+                <input
+                  type="number"
+                  name="weight"
+                  className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
+                  value={dailyMetrics.weight}
+                  onChange={handleMetricsChange}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Waist Size (cm)</label>
+                <input
+                  type="number"
+                  name="waistSize"
+                  className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
+                  value={dailyMetrics.waistSize}
+                  onChange={handleMetricsChange}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Chest Size (cm)</label>
+                <input
+                  type="number"
+                  name="chestSize"
+                  className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
+                  value={dailyMetrics.chestSize}
+                  onChange={handleMetricsChange}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">Thigh Size (cm)</label>
+                <input
+                  type="number"
+                  name="thighSize"
+                  className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
+                  value={dailyMetrics.thighSize}
+                  onChange={handleMetricsChange}
+                />
+              </div>
+            </div>
+            <div className="flex justify-center mt-4">
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 hover:bg-purple-700 py-2 px-4 text-sm font-medium text-white shadow-sm"
+              >
+                Log Metrics
+              </button>
+            </div>
+          </form>
         </div>
 
         <div className="mt-8 bg-gray-800 p-4 sm:p-6 text-white shadow-md rounded-lg">
