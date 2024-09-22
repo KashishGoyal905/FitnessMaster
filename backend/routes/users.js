@@ -456,22 +456,35 @@ router.post('/reset-password/:token', async (req, res) => {
 });
 
 // User daily metrics:
-router.post('/metrics/:id',checkAuth, async (req, res) => {
+router.post('/metrics/:userId', checkAuth, async (req, res) => {
+    const { userId } = req.params;
+    const { weight, waistSize, chestSize, thighSize } = req.body;
+
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(400).json({ message: 'User Not Found.' });
         }
 
-        const { weight, waistSize, chestSize, thighSize } = req.body;
+        const currentDate = new Date().toISOString().split('T')[0]; // Get only the date part (YYYY-MM-DD)
+        const lastSubmissionDate = user.lastMetricSubmission ? user.lastMetricSubmission.toISOString().split('T')[0] : null;
+        console.log(lastSubmissionDate);
+        console.log(currentDate);
+        console.log(Date.now());
 
-        // Add the new metrics entry to the user's fitnessMetrics array
-        user.fitnessMetrics.push({ weight, waistSize, chestSize, thighSize });
+        if (lastSubmissionDate === currentDate) {
+            return res.status(400).json({ message: 'You can only submit metrics once per day.' });
+        }
+
+        // Update metrics
+        user.fitnessMetrics = { weight, waistSize, chestSize, thighSize };
+        user.lastMetricSubmission = new Date(); // Set the current date as the last submission date
 
         await user.save();
-        res.status(200).json({ message: 'Metrics logged successfully', user });
-    } catch (err) {
-        res.status(500).json({ message: 'Error logging metrics', error: err });
+
+        res.status(200).json({ message: 'Daily metrics logged successfully', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to log daily metrics', error: error.message });
     }
 });
 
