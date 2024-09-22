@@ -9,7 +9,7 @@ const authContext = createContext({
     user: null,
     login: () => { },
     logout: () => { },
-    update: () => { },
+    updateFun: () => { },
 });
 
 // export function authContextProvider({ children }) {

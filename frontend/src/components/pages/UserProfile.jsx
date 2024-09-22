@@ -6,8 +6,8 @@ import useRoleRedirect from '../../middleware/useRoleRedirect';
 
 export default function UserProfile() {
   useRoleRedirect(['user'], '/');
-
   const { user, updateFun } = useContext(authContext);
+
   const [profileData, setProfileData] = useState({
     username: user.username,
     contactNumber: user.contactNumber || '',
@@ -30,10 +30,10 @@ export default function UserProfile() {
   };
 
   const [dailyMetrics, setDailyMetrics] = useState({
-    weight: '',
-    waistSize: '',
-    chestSize: '',
-    thighSize: '',
+    weight: user.fitnessMetrics.weight || '',
+    waistSize: user.fitnessMetrics.waistSize || '',
+    chestSize: user.fitnessMetrics.chestSize || '',
+    thighSize: user.fitnessMetrics.thighSize || '',
   });
 
   // Update Daily Metrics Inputs
@@ -63,7 +63,14 @@ export default function UserProfile() {
       }
 
       toast.success(resData.message || 'Daily metrics logged successfully');
-      setDailyMetrics({ weight: '', waistSize: '', chestSize: '', thighSize: '' });
+
+      setDailyMetrics({
+        weight: resData.user.fitnessMetrics.weight,
+        waistSize: resData.user.fitnessMetrics.waistSize,
+        chestSize: resData.user.fitnessMetrics.chestSize,
+        thighSize: resData.user.fitnessMetrics.thighSize
+      });
+      updateFun(resData.user);
     } catch (err) {
       toast.error(err.message || 'Failed to log daily metrics');
     }
@@ -183,12 +190,22 @@ export default function UserProfile() {
               </div>
             </div>
             <div className="flex justify-center mt-4">
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 hover:bg-purple-700 py-2 px-4 text-sm font-medium text-white shadow-sm"
-              >
-                Log Metrics
-              </button>
+              {user.lastMetricSubmission === Date.now() ?
+                <button
+                  type="submit"
+                  disabled
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 hover:bg-purple-700 py-2 px-4 text-sm font-medium text-white shadow-sm"
+                >
+                  Log Metrics
+                </button> :
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 hover:bg-purple-700 py-2 px-4 text-sm font-medium text-white shadow-sm"
+                >
+                  Log Metrics
+                </button>
+              }
+
             </div>
           </form>
         </div>

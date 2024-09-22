@@ -18,7 +18,7 @@ const userSchema = new Schema({
     city: { type: String },
     state: { type: String },
     postalcode: { type: Number },
-    
+
     // Fitness-related fields
     weight: { type: Number }, // User's weight in kg
     height: { type: Number }, // User's height in cm
@@ -37,6 +37,9 @@ const userSchema = new Schema({
         thighSize: { type: Number },
         weight: { type: Number }, // Store daily weight
     }],
+    // Field to store the last metric submission date
+    lastMetricSubmission: { type: Date },
+
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
