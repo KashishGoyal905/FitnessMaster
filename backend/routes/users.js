@@ -468,17 +468,15 @@ router.post('/metrics/:userId', checkAuth, async (req, res) => {
 
         const currentDate = new Date().toISOString().split('T')[0]; // Get only the date part (YYYY-MM-DD)
         const lastSubmissionDate = user.lastMetricSubmission ? user.lastMetricSubmission.toISOString().split('T')[0] : null;
-        console.log(lastSubmissionDate);
-        console.log(currentDate);
-        console.log(Date.now());
 
         if (lastSubmissionDate === currentDate) {
             return res.status(400).json({ message: 'You can only submit metrics once per day.' });
         }
 
-        // Update metrics
-        user.fitnessMetrics = { weight, waistSize, chestSize, thighSize };
-        user.lastMetricSubmission = new Date(); // Set the current date as the last submission date
+        // Push the new daily metrics to the fitnessMetrics array
+        user.fitnessMetrics.push({ weight, waistSize, chestSize, thighSize, date: new Date() });
+        // Update the lastMetricSubmission field with the current date
+        user.lastMetricSubmission = new Date();
 
         await user.save();
 

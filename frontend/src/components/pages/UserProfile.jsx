@@ -29,11 +29,12 @@ export default function UserProfile() {
     setProfileData({ ...profileData, [name]: value });
   };
 
+  const length = user.fitnessMetrics.length;
   const [dailyMetrics, setDailyMetrics] = useState({
-    weight: user.fitnessMetrics.weight || '',
-    waistSize: user.fitnessMetrics.waistSize || '',
-    chestSize: user.fitnessMetrics.chestSize || '',
-    thighSize: user.fitnessMetrics.thighSize || '',
+    weight: length > 0 ? user.fitnessMetrics[length - 1].weight : '',
+    waistSize: length > 0 ? user.fitnessMetrics[length - 1].waistSize : '',
+    chestSize: length > 0 ? user.fitnessMetrics[length - 1].chestSize : '',
+    thighSize: length > 0 ? user.fitnessMetrics[length - 1].thighSize : '',
   });
 
   // Update Daily Metrics Inputs
@@ -48,6 +49,7 @@ export default function UserProfile() {
     const token = localStorage.getItem('token');
 
     try {
+      setIsLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/metrics/${user._id}`, {
         method: 'POST',
         headers: {
@@ -62,16 +64,19 @@ export default function UserProfile() {
         throw new Error(resData.message || 'Failed to log daily metrics');
       }
 
+      const length = user.fitnessMetrics.length;
       toast.success(resData.message || 'Daily metrics logged successfully');
-
+      setIsLoading(false);
       setDailyMetrics({
-        weight: resData.user.fitnessMetrics.weight,
-        waistSize: resData.user.fitnessMetrics.waistSize,
-        chestSize: resData.user.fitnessMetrics.chestSize,
-        thighSize: resData.user.fitnessMetrics.thighSize
+        weight: resData.user.fitnessMetrics[length - 1].weight,
+        waistSize: resData.user.fitnessMetrics[length - 1].waistSize,
+        chestSize: resData.user.fitnessMetrics[length - 1].chestSize,
+        thighSize: resData.user.fitnessMetrics[length - 1].thighSize,
       });
+
       updateFun(resData.user);
     } catch (err) {
+      setIsLoading(false);
       toast.error(err.message || 'Failed to log daily metrics');
     }
   }
@@ -104,6 +109,12 @@ export default function UserProfile() {
       toast.error(err.message || 'Failed to update user details');
     }
   }
+
+  const isSameDay = (d1, d2) => {
+    return d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate();
+  };
 
   return (
     <div className="bg-gray-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex justify-center items-center">
@@ -156,6 +167,7 @@ export default function UserProfile() {
                   className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={dailyMetrics.weight}
                   onChange={handleMetricsChange}
+                  disabled={user.lastMetricSubmission && isSameDay(new Date(user.lastMetricSubmission), new Date())}
                 />
               </div>
               <div>
@@ -166,6 +178,7 @@ export default function UserProfile() {
                   className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={dailyMetrics.waistSize}
                   onChange={handleMetricsChange}
+                  disabled={user.lastMetricSubmission && isSameDay(new Date(user.lastMetricSubmission), new Date())}
                 />
               </div>
               <div>
@@ -176,6 +189,7 @@ export default function UserProfile() {
                   className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={dailyMetrics.chestSize}
                   onChange={handleMetricsChange}
+                  disabled={user.lastMetricSubmission && isSameDay(new Date(user.lastMetricSubmission), new Date())}
                 />
               </div>
               <div>
@@ -186,26 +200,27 @@ export default function UserProfile() {
                   className="mt-1 block w-full border-none rounded-md shadow-sm py-2 px-3 bg-gray-700 text-white"
                   value={dailyMetrics.thighSize}
                   onChange={handleMetricsChange}
+                  disabled={user.lastMetricSubmission && isSameDay(new Date(user.lastMetricSubmission), new Date())}
                 />
               </div>
             </div>
             <div className="flex justify-center mt-4">
-              {user.lastMetricSubmission === Date.now() ?
+              {user.lastMetricSubmission && isSameDay(new Date(user.lastMetricSubmission), new Date()) ? (
                 <button
                   type="submit"
                   disabled
-                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 hover:bg-purple-700 py-2 px-4 text-sm font-medium text-white shadow-sm"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-green-500 py-2 px-4 text-sm font-medium text-white shadow-sm"
                 >
-                  Log Metrics
-                </button> :
+                  Today's Metrics Submitted
+                </button>)
+                :
                 <button
                   type="submit"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 hover:bg-purple-700 py-2 px-4 text-sm font-medium text-white shadow-sm"
                 >
-                  Log Metrics
+                  Log Today's Metrics
                 </button>
               }
-
             </div>
           </form>
         </div>
