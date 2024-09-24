@@ -64,9 +64,13 @@ export default function UserProfile() {
         throw new Error(resData.message || 'Failed to log daily metrics');
       }
 
-      const length = user.fitnessMetrics.length;
+      // Now use the latest metrics from the response instead of the old `user`
+      const length = resData.user.fitnessMetrics.length;
+
       toast.success(resData.message || 'Daily metrics logged successfully');
       setIsLoading(false);
+
+      // Update `dailyMetrics` with the latest values from the response
       setDailyMetrics({
         weight: resData.user.fitnessMetrics[length - 1].weight,
         waistSize: resData.user.fitnessMetrics[length - 1].waistSize,
@@ -74,12 +78,15 @@ export default function UserProfile() {
         thighSize: resData.user.fitnessMetrics[length - 1].thighSize,
       });
 
+      // Optionally update the user context or state with the new user data
       updateFun(resData.user);
+
     } catch (err) {
       setIsLoading(false);
       toast.error(err.message || 'Failed to log daily metrics');
     }
   }
+
 
   async function handleSubmit(e) {
     e.preventDefault();

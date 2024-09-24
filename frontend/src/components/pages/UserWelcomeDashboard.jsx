@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import authContext from '../../context/AuthContext';
@@ -10,6 +11,8 @@ export default function UserWelcomeDashboard() {
   const { user } = useContext(authContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [attendance, setAttendance] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [metrics, setMetrics] = useState([]);
 
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -32,12 +35,34 @@ export default function UserWelcomeDashboard() {
       }
     };
 
+    const fetchMetrics = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/metrics/${user._id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setMetrics(data.metrics);
+        } else {
+          console.error('Failed to fetch metrics:', data.message);
+        }
+      } catch (err) {
+        console.error('Error fetching metrics:', err.message);
+      }
+    };
+
     fetchAttendance();
+    fetchMetrics();
   }, [user._id]);
 
   const markAttendance = async (date) => {
     if (new Date().toDateString() === date.toDateString()) {
       try {
+        setIsLoading(true);
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/mark-attendance/${user._id}`, {
           method: 'POST',
           headers: {
@@ -54,7 +79,9 @@ export default function UserWelcomeDashboard() {
         } else {
           throw new Error(data.message || 'Failed to mark attendance');
         }
+        setIsLoading(false);
       } catch (err) {
+        setIsLoading(false);
         console.error(err.message);
         toast.error(err.message || 'Error marking attendance');
       }
@@ -86,6 +113,19 @@ export default function UserWelcomeDashboard() {
     return null;
   };
 
+  const renderChart = (dataKey, label) => (
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={metrics} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey={dataKey} stroke="#8884d8" activeDot={{ r: 8 }} />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+
   return (
     <div className="container mx-auto p-8 bg-gray-900 text-white min-h-screen">
       <div className="text-center mb-10">
@@ -99,6 +139,13 @@ export default function UserWelcomeDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {isLoading && (
+          <div className="loading-overlay">
+            <p className="relative">
+              <span className="loading loading-dots loading-lg text-primary"></span>
+            </p>
+          </div>
+        )}
         {/* Calendar for Attendance */}
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
@@ -130,14 +177,36 @@ export default function UserWelcomeDashboard() {
           </div>
         </div>
 
-        {/* Attendance Chart on the Right */}
+        {/* Charts for Metrics */}
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">
-            Attendance Chart
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Weight Progress
           </h2>
-          <AttendanceChart userId={user._id} />
+          {renderChart('weight', 'Weight')}
+        </div>
+
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Waist Size Progress
+          </h2>
+          {renderChart('waistSize', 'Waist Size')}
+        </div>
+
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Chest Size Progress
+          </h2>
+          {renderChart('chestSize', 'Chest Size')}
+        </div>
+
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Thigh Size Progress
+          </h2>
+          {renderChart('thighSize', 'Thigh Size')}
         </div>
       </div>
     </div>
   );
 }
+         
