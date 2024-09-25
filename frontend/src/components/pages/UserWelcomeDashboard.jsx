@@ -1,18 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import authContext from '../../context/AuthContext';
-import AttendanceChart from '../Charts/AttendanceChart.jsx';
-import { toast } from 'react-toastify';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip as ChartTooltip, Legend as ChartLegend } from 'chart.js';
 import 'react-toastify/dist/ReactToastify.css';
+
+ChartJS.register(ArcElement, ChartTooltip, ChartLegend);
 
 export default function UserWelcomeDashboard() {
   const { user } = useContext(authContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [attendance, setAttendance] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [metrics, setMetrics] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -23,7 +25,6 @@ export default function UserWelcomeDashboard() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
         const data = await response.json();
         if (response.ok) {
           setAttendance(data.attendance);
@@ -43,10 +44,9 @@ export default function UserWelcomeDashboard() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
         const data = await response.json();
         if (response.ok) {
-          setMetrics(data.metrics);
+          setMetrics(data.metrics); // Assuming your backend sends a 'metrics' field with the array of metrics data
         } else {
           console.error('Failed to fetch metrics:', data.message);
         }
@@ -75,7 +75,6 @@ export default function UserWelcomeDashboard() {
         const data = await response.json();
         if (response.ok) {
           setAttendance([...attendance, { date: date.toDateString(), status: 'present' }]);
-          toast.success(`Attendance marked for ${date.toDateString()}`);
         } else {
           throw new Error(data.message || 'Failed to mark attendance');
         }
@@ -83,7 +82,6 @@ export default function UserWelcomeDashboard() {
       } catch (err) {
         setIsLoading(false);
         console.error(err.message);
-        toast.error(err.message || 'Error marking attendance');
       }
     } else {
       alert('You can only mark attendance for today.');
@@ -113,18 +111,39 @@ export default function UserWelcomeDashboard() {
     return null;
   };
 
-  const renderChart = (dataKey, label) => (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={metrics} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey={dataKey} stroke="#8884d8" activeDot={{ r: 8 }} />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+  const renderChart = (field, label) => {
+    if (!metrics.length) {
+      return <p className="text-gray-400">No data available for {label}.</p>;
+    }
+
+    return (
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={metrics} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey={field} stroke="#8884d8" activeDot={{ r: 8 }} />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  // Attendance Pie Chart
+  const attendanceData = {
+    labels: ['Present', 'Absent'],
+    datasets: [
+      {
+        data: [
+          attendance.filter((att) => att.status === 'present').length,
+          attendance.filter((att) => att.status === 'absent').length,
+        ],
+        backgroundColor: ['#4CAF50', '#FF5252'],
+        hoverBackgroundColor: ['#45a049', '#ff4040'],
+      },
+    ],
+  };
 
   return (
     <div className="container mx-auto p-8 bg-gray-900 text-white min-h-screen">
@@ -146,19 +165,16 @@ export default function UserWelcomeDashboard() {
             </p>
           </div>
         )}
+
         {/* Calendar for Attendance */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-            Your Attendance
-          </h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Your Attendance</h2>
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
             className="bg-gray-700 text-white rounded-lg calendar-dark mx-auto shadow-md"
             tileContent={tileContent}
           />
-
-          {/* Mark Attendance Button Below the Calendar */}
           <div className="mt-6 text-center">
             {new Date().toDateString() === selectedDate.toDateString() ? (
               attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
@@ -177,36 +193,37 @@ export default function UserWelcomeDashboard() {
           </div>
         </div>
 
-        {/* Charts for Metrics */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-            Weight Progress
-          </h2>
+        {/* Attendance Pie Chart */}
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Attendance Overview</h2>
+          {attendance.length ? (
+            <Pie data={attendanceData} />
+          ) : (
+            <p className="text-gray-400">No attendance data available yet.</p>
+          )}
+        </div>
+
+        {/* Metric Charts */}
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Weight Progress</h2>
           {renderChart('weight', 'Weight')}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-            Waist Size Progress
-          </h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Waist Size Progress</h2>
           {renderChart('waistSize', 'Waist Size')}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-            Chest Size Progress
-          </h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Chest Size Progress</h2>
           {renderChart('chestSize', 'Chest Size')}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-            Thigh Size Progress
-          </h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Thigh Size Progress</h2>
           {renderChart('thighSize', 'Thigh Size')}
         </div>
       </div>
     </div>
   );
 }
-         
