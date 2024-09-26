@@ -130,7 +130,6 @@ export default function UserWelcomeDashboard() {
     );
   };
 
-  // Attendance Pie Chart
   const attendanceData = {
     labels: ['Present', 'Absent'],
     datasets: [
@@ -148,10 +147,10 @@ export default function UserWelcomeDashboard() {
   return (
     <div className="container mx-auto p-8 bg-gray-900 text-white min-h-screen">
       <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-purple-500">
+        <h1 className="text-4xl font-bold text-purple-600">
           Welcome, {user.username}
         </h1>
-        <p className="md:text-xl mt-4 mb-2 text-gray-300 italic">
+        <p className="mt-4 mb-2 text-gray-300 italic">
           "Success is the sum of small efforts, repeated day in and day out."
         </p>
         <hr className="border-t-2 border-purple-600 mx-auto w-3/4" />
@@ -166,36 +165,34 @@ export default function UserWelcomeDashboard() {
           </div>
         )}
 
-        {/* Calendar for Attendance */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Your Attendance</h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-center">Your Attendance</h2>
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
-            className="bg-gray-700 text-white rounded-lg calendar-dark mx-auto shadow-md"
+            className="bg-gray-700 text-white rounded-lg calendar-dark mx-auto shadow-md mt-6"
             tileContent={tileContent}
           />
           <div className="mt-6 text-center">
             {new Date().toDateString() === selectedDate.toDateString() ? (
               attendance.find((att) => new Date(att.date).toDateString() === selectedDate.toDateString()) ? (
-                <p className="text-green-400 text-sm md:text-xl">Attendance already marked for today!</p>
+                <p className="text-green-400 text-sm">Attendance already marked for today!</p>
               ) : (
                 <button
                   onClick={() => markAttendance(selectedDate)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white text-sm md:text-xl px-6 py-2 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg mt-4"
+                  className="bg-red-700 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300 transform hover:scale-110 shadow-lg"
                 >
                   Mark Attendance for Today
                 </button>
               )
             ) : (
-              <p className="text-red-500 text-2xl">You can only mark attendance for today.</p>
+              <p className="text-red-500">You can only mark attendance for today.</p>
             )}
           </div>
         </div>
 
-        {/* Attendance Pie Chart */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Attendance Overview</h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-center">Attendance Overview</h2>
           {attendance.length ? (
             <Pie data={attendanceData} />
           ) : (
@@ -203,25 +200,24 @@ export default function UserWelcomeDashboard() {
           )}
         </div>
 
-        {/* Metric Charts */}
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Weight Progress</h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-center">Weight Progress</h2>
           {renderChart('weight', 'Weight')}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Waist Size Progress</h2>
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-center">Waist Size Progress</h2>
           {renderChart('waistSize', 'Waist Size')}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Chest Size Progress</h2>
-          {renderChart('chestSize', 'Chest Size')}
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-center">Thigh Size Progress</h2>
+          {renderChart('thighSize', 'Thigh Size')}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Thigh Size Progress</h2>
-          {renderChart('thighSize', 'Thigh Size')}
+        <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-center">Chest Size Progress</h2>
+          {renderChart('chestSize', 'Chest Size')}
         </div>
       </div>
     </div>

@@ -66,6 +66,8 @@ export default function UserClasses() {
 
   return (
     <div className="p-6 bg-gray-900 min-h-screen text-white">
+      <h2 className="text-2xl font-bold mb-6 text-center">My Enrolled Classes</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {isLoading &&
         <div className="loading-overlay">
           <p className="relative">
@@ -73,8 +75,6 @@ export default function UserClasses() {
           </p>
         </div>
       }
-      <h2 className="text-2xl font-bold mb-6 text-center">My Enrolled Classes</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {enrolledClasses && enrolledClasses.map((classData) => (
           <div key={classData._id} className="card glass my-4 w-full h-[34rem] rounded-lg shadow-lg overflow-hidden md:transform md:transition-transform md:hover:scale-105">
             <figure className="w-full h-64 overflow-hidden">
