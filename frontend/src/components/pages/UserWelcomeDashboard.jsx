@@ -112,7 +112,8 @@ export default function UserWelcomeDashboard() {
   };
 
   const renderChart = (field, label) => {
-    if (!metrics.length) {
+    const hasValidData = metrics.some(metric => metric[field]);
+    if (!metrics.length || !hasValidData) {
       return <p className="text-gray-400">No data available for {label}.</p>;
     }
 
@@ -146,6 +147,13 @@ export default function UserWelcomeDashboard() {
 
   return (
     <div className="container mx-auto p-8 bg-gray-900 text-white min-h-screen">
+      {isLoading && (
+          <div className="loading-overlay">
+            <p className="relative">
+              <span className="loading loading-dots loading-lg text-primary"></span>
+            </p>
+          </div>
+        )}
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold text-purple-600">
           Welcome, {user.username}
@@ -157,13 +165,7 @@ export default function UserWelcomeDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {isLoading && (
-          <div className="loading-overlay">
-            <p className="relative">
-              <span className="loading loading-dots loading-lg text-primary"></span>
-            </p>
-          </div>
-        )}
+        
 
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center">Your Attendance</h2>
