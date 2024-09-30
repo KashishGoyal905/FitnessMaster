@@ -4,11 +4,32 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function UserDetails() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [metrics, setMetrics] = useState([]);
+
+  const renderChart = (field, label) => {
+    if (!metrics.length) {
+      return <p className="text-gray-400">No data available for {label}.</p>;
+    }
+
+    return (
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={metrics} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey={field} stroke="#8884d8" activeDot={{ r: 8 }} />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  };
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -145,7 +166,7 @@ export default function UserDetails() {
       </div>
 
       {/* Attendance Calendar */}
-      <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg">
+      <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Attendance</h2>
         <Calendar
           onChange={setSelectedDate}
@@ -153,6 +174,29 @@ export default function UserDetails() {
           className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
           tileContent={tileContent}
         />
+      </div>
+
+      {/* Graphs Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-center">Weight Progress</h2>
+          {renderChart('weight', 'Weight')}
+        </div>
+
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-center">Waist Size Progress</h2>
+          {renderChart('waistSize', 'Waist Size')}
+        </div>
+
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-center">Thigh Size Progress</h2>
+          {renderChart('thighSize', 'Thigh Size')}
+        </div>
+
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-center">Chest Size Progress</h2>
+          {renderChart('chestSize', 'Chest Size')}
+        </div>
       </div>
 
       {/* Admin Actions */}
@@ -174,6 +218,6 @@ export default function UserDetails() {
       </div>
     </div>
   ) : (
-    <p>Loading user details...</p>
+    <p>Loading...</p>
   );
 }
