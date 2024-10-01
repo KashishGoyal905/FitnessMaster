@@ -5,12 +5,14 @@ import 'react-calendar/dist/Calendar.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Pie } from 'react-chartjs-2';
 
 export default function UserDetails() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [metrics, setMetrics] = useState([]);
+  const [attendance, setAttendance] = useState([]);
 
   const renderChart = (field, label) => {
     if (!metrics.length) {
@@ -32,6 +34,25 @@ export default function UserDetails() {
   };
 
   useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/attendance/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setAttendance(data.attendance);
+        } else {
+          console.error('Failed to fetch attendance:', data.message);
+        }
+      } catch (err) {
+        console.error('Error fetching attendance:', err.message);
+      }
+    };
+
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}`, {
@@ -52,7 +73,28 @@ export default function UserDetails() {
       }
     };
 
+    const fetchMetrics = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/metrics/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setMetrics(data.metrics); // Assuming your backend sends a 'metrics' field with the array of metrics data
+        } else {
+          console.error('Failed to fetch metrics:', data.message);
+        }
+      } catch (err) {
+        console.error('Error fetching metrics:', err.message);
+      }
+    };
+
     fetchUserDetails();
+    fetchAttendance();
+    fetchMetrics();
   }, [userId]);
 
   const calculateBMI = (weight, height) => {
@@ -87,7 +129,22 @@ export default function UserDetails() {
     return null;
   };
 
+  const attendanceData = {
+    labels: ['Present', 'Absent'],
+    datasets: [
+      {
+        data: [
+          attendance.filter((att) => att.status === 'present').length,
+          attendance.filter((att) => att.status === 'absent').length,
+        ],
+        backgroundColor: ['#4CAF50', '#FF5252'],
+        hoverBackgroundColor: ['#45a049', '#ff4040'],
+      },
+    ],
+  };
+
   return user ? (
+    
     <div className="container mx-auto p-4 sm:p-6 bg-gray-900 text-white min-h-screen">
       {/* Profile Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
@@ -166,14 +223,25 @@ export default function UserDetails() {
       </div>
 
       {/* Attendance Calendar */}
-      <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Attendance</h2>
-        <Calendar
-          onChange={setSelectedDate}
-          value={selectedDate}
-          className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
-          tileContent={tileContent}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Attendance</h2>
+          <Calendar
+            onChange={setSelectedDate}
+            value={selectedDate}
+            className="bg-slate-950 rounded-lg text-white calendar-dark mx-auto"
+            tileContent={tileContent}
+          />
+        </div>
+
+        <div className="bg-gray-800 p-8 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-center">Attendance Overview</h2>
+          {attendance.length ? (
+            <Pie data={attendanceData} />
+          ) : (
+            <p className="text-gray-400 text-center">No attendance data available yet.</p>
+          )}
+        </div>
       </div>
 
       {/* Graphs Section */}
