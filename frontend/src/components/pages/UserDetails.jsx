@@ -144,7 +144,7 @@ export default function UserDetails() {
   };
 
   return user ? (
-    
+
     <div className="container mx-auto p-4 sm:p-6 bg-gray-900 text-white min-h-screen">
       {/* Profile Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
