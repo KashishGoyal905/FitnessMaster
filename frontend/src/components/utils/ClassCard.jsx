@@ -61,7 +61,7 @@ export default function ClassCard({ image, title, description, time, instructor,
                 <p className="text-center mb-4">Instructor: {instructor}</p>
                 <div className="card-actions justify-between">
                     <div>
-                        <h2 className="mt-2 text-2xl font-bold text-left text-green-400">{cost}</h2>
+                        <h2 className="mt-2 text-2xl font-bold text-left text-green-400">₹ {cost}</h2>
                     </div>
                     {isAuthenticated && <button className="btn btn-primary" onClick={() => handleClassJoin(id)}>Join Now</button>}
 

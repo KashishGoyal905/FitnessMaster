@@ -26,7 +26,7 @@ export default function Classes() {
         }
         
         setIsLoading(false);
-        setState(data.classes); // Assuming the response has a 'classes' array
+        setState(data.classes);
       } catch (error) {
         setIsLoading(false);
         console.error(`Failed to fetch ${phase} classes:`, error);
@@ -43,23 +43,25 @@ export default function Classes() {
   }, []);
 
   return (
-    <div className="classes-page pt-[5rem]">
+    <div className="classes-page pt-[5rem] bg-gray-900 text-white min-h-screen">
       {isLoading &&
-        <div className="loading-overlay">
+        <div className="loading-overlay flex justify-center items-center h-[60vh]">
           <p className="relative">
-            <span className="loading loading-dots loading-lg text-primary"></span>
+            <span className="loading loading-dots loading-lg text-purple-500"></span>
           </p>
         </div>
       }
 
-      <div className="container mx-auto py-6 md:py-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">Our All Classes</h2>
-        <p className='text-2xl text-center mb-2 md:mb-8'>Choose a time that suits you best</p>
+      {/* Header */}
+      <div className="container mx-auto py-6 md:py-12 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-purple-500 mb-2">Our All Classes</h2>
+        <p className='text-xl md:text-2xl text-gray-300 mb-8'>Choose a time that suits you best</p>
       </div>
 
-      <div className="class-section bg-gray-800 py-8">
-        <h3 className="text-2xl font-bold text-center mb-4">Morning Classes</h3>
-        <div className="flex px-4 md:px-12 my-4 md:my-12 justify-around flex-wrap">
+      {/* Morning Classes */}
+      <div className="class-section bg-gray-800 py-10">
+        <h3 className="text-2xl font-bold text-center text-gray-300 mb-6">Morning Classes</h3>
+        <div className="flex px-4 md:px-12 my-6 justify-around flex-wrap">
           {morningClasses && morningClasses.map((classInfo, index) => (
             <ClassCard
               key={index}
@@ -75,9 +77,10 @@ export default function Classes() {
         </div>
       </div>
 
-      <div className="class-section py-8">
-        <h3 className="text-2xl font-bold text-center mb-4">Afternoon Classes</h3>
-        <div className="flex px-4 md:px-12 my-4 md:my-12 justify-around flex-wrap">
+      {/* Afternoon Classes */}
+      <div className="class-section bg-gray-900 py-10">
+        <h3 className="text-2xl font-bold text-center text-gray-300 mb-6">Afternoon Classes</h3>
+        <div className="flex px-4 md:px-12 my-6 justify-around flex-wrap">
           {afternoonClasses && afternoonClasses.map((classInfo, index) => (
             <ClassCard
               key={index}
@@ -93,9 +96,10 @@ export default function Classes() {
         </div>
       </div>
 
-      <div className="class-section bg-gray-800 py-8">
-        <h3 className="text-2xl font-bold text-center mb-4">Evening Classes</h3>
-        <div className="flex px-4 md:px-12 my-4 md:my-12 justify-around flex-wrap">
+      {/* Evening Classes */}
+      <div className="class-section bg-gray-800 py-10">
+        <h3 className="text-2xl font-bold text-center text-gray-300 mb-6">Evening Classes</h3>
+        <div className="flex px-4 md:px-12 my-6 justify-around flex-wrap">
           {eveningClasses && eveningClasses.map((classInfo, index) => (
             <ClassCard
               key={index}
