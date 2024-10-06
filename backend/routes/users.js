@@ -42,8 +42,8 @@ router.get('/me', checkAuth, async (req, res) => {
 // Register | SignUp
 router.post('/signup', upload.single('image'), async function (req, res) {
     const { username, email, password } = req.body;
-    console.log('SignUp User Details Body: ', req.body);
-    console.log('SignUp Usre File req: ', req.file);
+    // console.log('SignUp User Details Body: ', req.body);
+    // console.log('SignUp Usre File req: ', req.file);
 
     // Checking if all the fields exists or not
     if (!username || !email || !password || !req.file) {
@@ -73,20 +73,20 @@ router.post('/signup', upload.single('image'), async function (req, res) {
             image: req.file ? req.file.path : null, // Save the filename
             imagePublicId: req.file ? req.file.filename : undefined // save the unique public id
         });
-        console.log('Created User', user);
+        // console.log('Created User', user);
         const savedUser = await user.save();
+
+         // To handle the isActive and lastLogin functionality
+         user.isActive = true;
+         user.lastLogin = new Date();
+         await user.save();
 
         // Creating Token
         let token;
         token = jwt.sign(
             { userId: savedUser._id, email: savedUser.email, userRole: savedUser.userRole }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }
         );
-        console.log('Token for SignUp: ', token);
-
-        // To handle the isActive and lastLogin functionality
-        user.isActive = true;
-        user.lastLogin = new Date();
-        await user.save();
+        // console.log('Token for SignUp: ', token);
 
         res.status(200).json({ message: 'Account created successfully', user: savedUser, token: token });
     } catch (error) {
