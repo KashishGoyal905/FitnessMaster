@@ -22,7 +22,7 @@ const crypto = require('crypto');
 
 
 
-// Get User Details for the context --Done
+// Get User Details for the context for useEffect --Done
 router.get('/me', checkAuth, async (req, res) => {
     // Extracting form the checkAuth middleware
     const userId = req.user.userId;

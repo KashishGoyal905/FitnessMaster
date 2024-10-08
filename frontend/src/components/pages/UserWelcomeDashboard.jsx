@@ -46,7 +46,7 @@ export default function UserWelcomeDashboard() {
         });
         const data = await response.json();
         if (response.ok) {
-          setMetrics(data.metrics); // Assuming your backend sends a 'metrics' field with the array of metrics data
+          setMetrics(data.metrics);
         } else {
           console.error('Failed to fetch metrics:', data.message);
         }
@@ -111,7 +111,7 @@ export default function UserWelcomeDashboard() {
     return null;
   };
 
-  const renderChart = (field, label) => {
+  const renderChart = (field, label, color) => {
     const hasValidData = metrics.some(metric => metric[field]);
     if (!metrics.length || !hasValidData) {
       return <p className="text-gray-400">No data available for {label}.</p>;
@@ -121,11 +121,11 @@ export default function UserWelcomeDashboard() {
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={metrics} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
+          <XAxis dataKey="date" stroke={color} />
+          <YAxis stroke={color} />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey={field} stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey={field} stroke={color} activeDot={{ r: 8 }} strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     );
@@ -165,8 +165,6 @@ export default function UserWelcomeDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        
-
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center">Your Attendance</h2>
           <Calendar
@@ -204,22 +202,22 @@ export default function UserWelcomeDashboard() {
 
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center">Weight Progress</h2>
-          {renderChart('weight', 'Weight')}
+          {renderChart('weight', 'Weight', '#8884d8')}
         </div>
 
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center">Waist Size Progress</h2>
-          {renderChart('waistSize', 'Waist Size')}
+          {renderChart('waistSize', 'Waist Size', '#84d888')}
         </div>
 
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center">Thigh Size Progress</h2>
-          {renderChart('thighSize', 'Thigh Size')}
+          {renderChart('thighSize', 'Thigh Size', '#d88484')}
         </div>
 
         <div className="bg-gray-800 p-8 rounded-lg shadow-xl transition duration-300 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center">Chest Size Progress</h2>
-          {renderChart('chestSize', 'Chest Size')}
+          {renderChart('chestSize', 'Chest Size', '#88d8d8')}
         </div>
       </div>
     </div>
